@@ -1509,51 +1509,147 @@
     }
 
     function classifySpeciesStatus(activeData, statusField) {
+        // Semua perhitungan dilakukan berdasarkan JUMLAH EKOR per jenis hewan,
+        // bukan jumlah record/form.
         const species = ['Sapi','Kambing','Domba'];
         const result = {};
-        species.forEach(sp => result[sp] = {diperiksa:0, layak:0, ditunda:0, ditolak:0, terpotong:0, layakKonsumsi:0, tidakLayak:0});
+        species.forEach(sp => result[sp] = {
+            diperiksa: 0,
+            layak: 0,
+            ditunda: 0,
+            ditolak: 0,
+            terpotong: 0,
+            layakKonsumsi: 0,
+            tidakLayak: 0
+        });
+
+        const getCount = (record, sp) => parseInt(record[sp.toLowerCase()]) || 0;
+        const getRows = (record, sp) => (Array.isArray(record.rincianGangguan) ? record.rincianGangguan : [])
+            .filter(g => String(g.jenis || '').trim().toLowerCase() === sp.toLowerCase());
 
         activeData.forEach(d => {
             species.forEach(sp => {
-                const count = parseInt(d[sp.toLowerCase()]) || 0;
+                const count = getCount(d, sp);
                 if (!count) return;
+
                 if (statusField === 'ante') {
                     result[sp].diperiksa += count;
-                    let rejected = 0, delayed = 0;
-                    (d.rincianGangguan || []).forEach(g => {
-                        if (g.jenis !== sp) return;
+
+                    let rejected = 0;
+                    let delayed = 0;
+                    const rows = getRows(d, sp);
+
+                    // PENTING: hanya jumlah pada jenis hewan yang bersangkutan
+                    // yang dihitung. Contoh 8 sapi + 2 kambing, gangguan 1 sapi
+                    // => Sapi ditolak 1, Kambing tetap 0 ditolak.
+                    rows.forEach(g => {
                         const n = Math.max(0, parseInt(g.jumlah) || 0);
                         const indikator = String(g.indikator || '').toLowerCase();
-                        if (indikator.includes('belum cukup umur') || indikator.includes('stres') || indikator.includes('tunda')) delayed += n;
-                        else if (indikator.includes('cacat') || indikator.includes('pmk') || indikator.includes('lsd') || indikator.includes('tidak layak') || indikator.includes('ditolak')) rejected += n;
+                        if (!n) return;
+
+                        if (
+                            indikator.includes('belum cukup umur') ||
+                            indikator.includes('stres') ||
+                            indikator.includes('kelelahan') ||
+                            indikator.includes('tunda') ||
+                            indikator.includes('ditunda')
+                        ) {
+                            delayed += n;
+                        } else if (
+                            indikator.includes('cacat') ||
+                            indikator.includes('pmk') ||
+                            indikator.includes('lsd') ||
+                            indikator.includes('tidak layak') ||
+                            indikator.includes('ditolak')
+                        ) {
+                            rejected += n;
+                        }
                     });
-                    if (!d.rincianGangguan || d.rincianGangguan.length === 0) {
+
+                    // Fallback hanya untuk record lama yang tidak memiliki
+                    // rincianGangguan sama sekali. Jangan menerapkan status
+                    // record ke semua jenis hewan jika rincian jenis lain ada.
+                    if (rows.length === 0 && (!Array.isArray(d.rincianGangguan) || d.rincianGangguan.length === 0)) {
                         const status = String(d.antemortem || '1. Sehat / Normal').toLowerCase();
-                        if (status.includes('tunda') || status.includes('belum cukup umur') || status.includes('stres')) delayed = count;
-                        else if (status !== '1. sehat / normal' && !status.includes('sehat')) rejected = count;
+                        if (
+                            status.includes('tunda') ||
+                            status.includes('ditunda') ||
+                            status.includes('belum cukup umur') ||
+                            status.includes('stres') ||
+                            status.includes('kelelahan')
+                        ) {
+                            delayed = count;
+                        } else if (status !== '1. sehat / normal' && !status.includes('sehat')) {
+                            rejected = count;
+                        }
                     }
+
+                    // Tidak boleh melebihi jumlah hewan pada jenis tersebut.
                     rejected = Math.min(count, rejected);
-                    delayed = Math.min(count - rejected, delayed);
+                    delayed = Math.min(Math.max(0, count - rejected), delayed);
+
                     result[sp].ditolak += rejected;
                     result[sp].ditunda += delayed;
                     result[sp].layak += Math.max(0, count - rejected - delayed);
                 } else {
-                    const status = String(d.postmortem || d.kesehatan || d.keteranganKesehatan || 'Sehat / Layak Konsumsi Total');
-                    const layakAnte = classifySpeciesStatus([d], 'ante')[sp].layak;
-                    const ditundaAnte = classifySpeciesStatus([d], 'ante')[sp].ditunda;
-                    const kandidatPotong = Math.max(0, layakAnte + ditundaAnte);
-                    const postLower = status.toLowerCase();
-                    if (postLower.includes('afkir total') || postLower.includes('tidak layak')) {
-                        result[sp].tidakLayak += kandidatPotong;
-                    } else if (postLower.includes('afkir sebagian')) {
-                        result[sp].tidakLayak += kandidatPotong;
+                    // Postmortem juga dihitung per ekor dan per jenis hewan.
+                    // Jumlah yang dapat dipotong berasal dari hasil Antemortem
+                    // jenis hewan yang sama.
+                    const ante = classifySpeciesStatus([d], 'ante')[sp];
+                    const kandidatPotong = Math.max(0, ante.layak + ante.ditunda);
+                    if (!kandidatPotong) return;
+
+                    result[sp].terpotong += kandidatPotong;
+
+                    let tidakLayak = 0;
+                    const rows = getRows(d, sp);
+                    let adaDetailPost = false;
+
+                    rows.forEach(g => {
+                        const n = Math.max(0, parseInt(g.jumlah) || 0);
+                        const indikator = String(g.indikator || '').toLowerCase();
+                        if (!n) return;
+
+                        // Hanya indikator afkir/tidak layak yang masuk
+                        // perhitungan Postmortem.
+                        if (
+                            indikator.includes('afkir') ||
+                            indikator.includes('tidak layak')
+                        ) {
+                            adaDetailPost = true;
+                            tidakLayak += n;
+                        }
+                    });
+
+                    tidakLayak = Math.min(kandidatPotong, tidakLayak);
+
+                    // Jika ada rincian jumlah postmortem, gunakan jumlah tersebut.
+                    // Dengan demikian 12 terpotong dan 2 afkir => tidak layak 2,
+                    // layak konsumsi 10; bukan 12.
+                    if (adaDetailPost) {
+                        result[sp].tidakLayak += tidakLayak;
+                        result[sp].layakKonsumsi += Math.max(0, kandidatPotong - tidakLayak);
+                    } else if (!Array.isArray(d.rincianGangguan) || d.rincianGangguan.length === 0) {
+                        // Fallback hanya untuk data lama yang benar-benar belum
+                        // memiliki rincian gangguan sama sekali. Jika sudah ada
+                        // rincian untuk jenis lain, jangan menyebarkan status
+                        // postmortem ke jenis hewan yang tidak mengalami gangguan.
+                        const status = String(d.postmortem || d.kesehatan || d.keteranganKesehatan || '').toLowerCase();
+                        if (status.includes('afkir total') || status.includes('tidak layak')) {
+                            result[sp].tidakLayak += kandidatPotong;
+                        } else {
+                            result[sp].layakKonsumsi += kandidatPotong;
+                        }
                     } else {
+                        // Ada rincian gangguan, tetapi jenis ini tidak tercatat
+                        // mengalami gangguan postmortem: seluruh kandidat jenis
+                        // ini tetap layak konsumsi.
                         result[sp].layakKonsumsi += kandidatPotong;
                     }
-                    result[sp].terpotong += kandidatPotong;
                 }
             });
         });
+
         return result;
     }
 

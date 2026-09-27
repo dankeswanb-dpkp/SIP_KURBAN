@@ -213,6 +213,59 @@
 .public-info-announcement .announcement-title, .info-announcement .announcement-title {
   color:#92400e; font-weight:800;
 }
+
+/* ===== PUBLIC DOCUMENTATION GALLERY - PROFESSIONAL ===== */
+.public-gallery-section{overflow:hidden}
+.public-gallery-heading{margin-bottom:18px!important;align-items:flex-end}
+.public-section-kicker{display:inline-flex;align-items:center;gap:7px;color:#059669;font-size:.65rem;font-weight:900;letter-spacing:.12em;margin-bottom:7px}
+.gallery-summary{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.gallery-summary span{display:inline-flex;align-items:center;gap:6px;padding:8px 11px;border:1px solid #dbe7df;background:#f8fcf9;border-radius:999px;color:#64748b;font-size:.68rem;font-weight:700}
+.gallery-summary i{color:#059669}.gallery-summary b{color:#0f172a}
+.professional-gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.doc-gallery-card{position:relative;background:#fff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;box-shadow:0 5px 18px rgba(15,23,42,.055);transition:transform .2s,box-shadow .2s,border-color .2s}
+.doc-gallery-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(15,23,42,.11);border-color:#cbd5e1}
+.doc-gallery-cover{position:relative;height:210px;background:#e2e8f0;overflow:hidden;cursor:pointer}
+.doc-gallery-cover img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .45s}.doc-gallery-card:hover .doc-gallery-cover img{transform:scale(1.045)}
+.doc-gallery-cover:after{content:'\f00e';font-family:'Font Awesome 6 Free';font-weight:900;position:absolute;right:12px;bottom:12px;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,.72);color:#fff;font-size:.78rem;opacity:0;transition:opacity .2s}.doc-gallery-card:hover .doc-gallery-cover:after{opacity:1}
+.doc-gallery-photo-count{position:absolute;left:12px;bottom:12px;background:rgba(15,23,42,.76);color:#fff;padding:6px 9px;border-radius:999px;font-size:.65rem;font-weight:800;backdrop-filter:blur(5px)}
+.doc-gallery-date{position:absolute;right:12px;top:12px;background:#fff;color:#14532d;padding:6px 9px;border-radius:999px;font-size:.63rem;font-weight:900;box-shadow:0 3px 10px rgba(0,0,0,.12)}
+.doc-gallery-body{padding:15px 16px 16px}.doc-gallery-title{font-size:.91rem;font-weight:900;color:#1e293b;margin:0 0 5px;line-height:1.35}.doc-gallery-location{font-size:.7rem;color:#64748b;display:flex;align-items:flex-start;gap:6px;line-height:1.45}.doc-gallery-location i{color:#ef4444;margin-top:2px}
+.doc-gallery-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:13px;padding-top:11px;border-top:1px solid #f1f5f9}.doc-gallery-officer{display:inline-flex;align-items:center;gap:6px;min-width:0;color:#475569;font-size:.67rem;font-weight:800}.doc-gallery-officer span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.doc-gallery-officer i{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#ecfdf5;color:#059669}.doc-gallery-badge{font-size:.62rem;font-weight:800;color:#047857;background:#ecfdf5;border:1px solid #bbf7d0;padding:5px 8px;border-radius:999px;white-space:nowrap}
+.doc-gallery-thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:8px}.doc-gallery-thumb{height:58px;border-radius:7px;overflow:hidden;background:#f1f5f9;cursor:pointer;border:1px solid #e2e8f0}.doc-gallery-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .2s}.doc-gallery-thumb:hover img{transform:scale(1.06)}
+.gallery-empty{grid-column:1/-1;border:1px dashed #cbd5e1;border-radius:14px;padding:45px 20px;text-align:center;background:linear-gradient(180deg,#f8fafc,#fff);color:#94a3b8}.gallery-empty i{display:block;font-size:2rem;color:#cbd5e1;margin-bottom:10px}.gallery-empty strong{display:block;color:#64748b;font-size:.85rem;margin-bottom:4px}.gallery-empty span{font-size:.72rem}
+.public-photo-lightbox{position:fixed;inset:0;background:rgba(2,6,23,.88);z-index:10050;display:none;align-items:center;justify-content:center;padding:24px}.public-photo-lightbox.show{display:flex}.public-photo-viewer{width:min(1100px,100%);max-height:92vh;display:flex;flex-direction:column;align-items:center;gap:10px}.public-photo-viewer img{max-width:100%;max-height:78vh;object-fit:contain;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.45);background:#111827}.public-photo-caption{width:100%;display:flex;justify-content:space-between;gap:12px;align-items:center;color:#fff;font-size:.75rem;padding:0 4px}.public-photo-close{position:fixed;right:22px;top:18px;width:42px;height:42px;border:0;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:1.1rem;cursor:pointer}
+@media(max-width:1000px){.professional-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:700px){.public-gallery-heading{align-items:flex-start}.gallery-summary{justify-content:flex-start}.professional-gallery{grid-template-columns:1fr}.doc-gallery-cover{height:230px}.public-photo-lightbox{padding:14px}.public-photo-viewer img{max-height:72vh}}
+
+/* === DOKUMENTASI PER TIM === */
+.team-gallery-card{position:relative;overflow:hidden;background:#fff;border:1px solid #e5e7eb;border-radius:22px;box-shadow:0 8px 28px rgba(15,23,42,.07);transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+.team-gallery-card:hover{transform:translateY(-4px);box-shadow:0 16px 38px rgba(15,23,42,.12);border-color:#cbd5e1}
+.team-gallery-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 20px 14px;border-bottom:1px solid #f1f5f9}
+.team-gallery-identity{display:flex;align-items:center;gap:12px;min-width:0}
+.team-gallery-avatar{width:46px;height:46px;flex:0 0 46px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f766e,#0f4c5c);color:#fff;font-size:18px;box-shadow:0 6px 16px rgba(15,118,110,.2)}
+.team-gallery-name{font-size:16px;font-weight:800;color:#0f172a;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.team-gallery-sub{font-size:11px;color:#64748b;margin-top:4px}
+.team-gallery-count{flex:0 0 auto;padding:6px 10px;border-radius:999px;background:#ecfdf5;color:#047857;font-size:11px;font-weight:800;white-space:nowrap}
+.team-gallery-cover{position:relative;height:245px;background:#f1f5f9;overflow:hidden;cursor:pointer}
+.team-gallery-cover img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .45s ease}
+.team-gallery-cover:hover img{transform:scale(1.035)}
+.team-gallery-cover:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,23,42,0) 48%,rgba(15,23,42,.68) 100%);pointer-events:none}
+.team-gallery-cover-info{position:absolute;z-index:2;left:16px;right:16px;bottom:14px;color:#fff}
+.team-gallery-cover-title{font-size:13px;font-weight:800;margin-bottom:3px;text-shadow:0 1px 3px rgba(0,0,0,.3)}
+.team-gallery-cover-location{font-size:11px;opacity:.94;display:flex;align-items:center;gap:5px}
+.team-gallery-photos{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;padding:10px 16px 0}
+.team-gallery-thumb{height:72px;border-radius:10px;overflow:hidden;background:#f1f5f9;cursor:pointer;position:relative}
+.team-gallery-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .25s ease}
+.team-gallery-thumb:hover img{transform:scale(1.06)}
+.team-gallery-thumb.more:after{content:attr(data-more);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,.62);color:#fff;font-size:13px;font-weight:800}
+.team-gallery-footer{padding:14px 16px 17px}
+.team-gallery-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}
+.team-gallery-stat{padding:9px 7px;background:#f8fafc;border:1px solid #eef2f7;border-radius:11px;text-align:center}
+.team-gallery-stat strong{display:block;font-size:14px;color:#0f172a}
+.team-gallery-stat span{display:block;font-size:9px;color:#64748b;margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
+.team-gallery-regions{display:flex;flex-wrap:wrap;gap:5px}
+.team-gallery-region{font-size:10px;color:#475569;background:#f1f5f9;border-radius:999px;padding:5px 8px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.team-gallery-empty{grid-column:1/-1;text-align:center;padding:46px 20px;color:#94a3b8}
+@media(max-width:700px){.team-gallery-head{padding:15px}.team-gallery-cover{height:220px}.team-gallery-photos{padding:9px 12px 0}.team-gallery-footer{padding:12px}.team-gallery-thumb{height:62px}}
 </style>
 
 
@@ -504,15 +557,21 @@
             <!-- INFORMASI RESMI -->
             
 
-            <!-- GALERI -->
-            <section class="public-card">
-                <div class="section-heading">
+            <!-- GALERI DOKUMENTASI PROFESIONAL -->
+            <section class="public-card public-gallery-section">
+                <div class="section-heading public-gallery-heading">
                     <div>
-                        <h2><i class="fa-solid fa-camera-retro"></i> Dokumentasi Pemeriksaan Lapangan</h2>
-                        <p>Dokumentasi kegiatan pemeriksaan yang berasal dari data petugas.</p>
+                        <div class="public-section-kicker"><i class="fa-solid fa-people-group"></i> DOKUMENTASI PER TIM</div>
+                        <h2><i class="fa-solid fa-camera-retro"></i> Dokumentasi Tim Pemeriksaan Lapangan</h2>
+                        <p>Dokumentasi pemeriksaan disusun per tim petugas agar aktivitas lapangan setiap tim mudah dilihat dan ditelusuri.</p>
+                    </div>
+                    <div class="gallery-summary" id="publicGallerySummary">
+                        <span><i class="fa-solid fa-people-group"></i> <b id="publicGalleryCount">0</b> tim</span>
+                        <span><i class="fa-solid fa-camera"></i> <b id="publicGalleryPhotoCount">0</b> foto</span>
+                        <span><i class="fa-solid fa-location-dot"></i> <b id="publicGalleryLocationCount">0</b> lokasi</span>
                     </div>
                 </div>
-                <div id="photoGalleryContainer" class="gallery-grid"></div>
+                <div id="photoGalleryContainer" class="gallery-grid professional-gallery"></div>
             </section>
 
             <!-- MASTER DATA -->
@@ -1838,61 +1897,92 @@
 
     function renderGallery(activeData) {
         const container = document.getElementById('photoGalleryContainer');
+        const teamCountEl = document.getElementById('publicGalleryCount');
+        const photoCountEl = document.getElementById('publicGalleryPhotoCount');
+        const locationCountEl = document.getElementById('publicGalleryLocationCount');
+        if (!container) return;
         container.innerHTML = '';
-        if(activeData.length === 0) {
-            container.innerHTML = `<div class="col-span-full text-center py-6 text-gray-400">Tidak ada foto dokumentasi pada filter ini.</div>`;
+
+        const teams = {};
+        let totalPhotos = 0;
+        activeData.forEach(item => {
+            const team = String(item.tim || item.team || item.petugas || 'Tim Petugas').trim() || 'Tim Petugas';
+            const photos = [];
+            (item.photos || []).forEach((p, idx) => {
+                if (typeof p === 'string' && p.trim()) photos.push({src:p.trim(), label:`Foto ${idx + 1}`, masjid:item.masjid || item.lokasi || 'Lokasi pemeriksaan'});
+            });
+            (item.additionalPhotos || []).forEach(p => {
+                if (p && p.data) photos.push({src:p.data, label:p.name || 'Dokumentasi tambahan', masjid:item.masjid || item.lokasi || 'Lokasi pemeriksaan'});
+            });
+            if (!photos.length) return;
+
+            if (!teams[team]) teams[team] = {name:team, photos:[], locations:new Set(), kecamatan:new Set(), records:0};
+            const t = teams[team];
+            t.photos.push(...photos);
+            t.records++;
+            const lokasi = item.masjid || item.lokasi;
+            if (lokasi) t.locations.add(lokasi);
+            if (item.kecamatan) t.kecamatan.add(item.kecamatan);
+            totalPhotos += photos.length;
+        });
+
+        const rows = Object.values(teams).sort((a,b) => a.name.localeCompare(b.name, 'id'));
+        if (teamCountEl) teamCountEl.textContent = rows.length;
+        if (photoCountEl) photoCountEl.textContent = totalPhotos;
+        if (locationCountEl) locationCountEl.textContent = rows.reduce((n,t)=>n+t.locations.size,0);
+
+        if (!rows.length) {
+            container.innerHTML = `<div class="team-gallery-empty"><i class="fa-regular fa-images" style="font-size:34px;display:block;margin-bottom:10px"></i><strong style="display:block;color:#64748b">Belum ada dokumentasi pada filter ini</strong><span>Foto dokumentasi tim akan tampil di sini setelah data petugas tersedia.</span></div>`;
             return;
         }
 
-        const photoTitles = ["(Foto 1)", "(Foto 2)", "(Foto 3)"];
+        rows.forEach(team => {
+            const first = team.photos[0];
+            const initials = team.name.split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase() || 'T';
+            const locations = [...team.locations];
+            const regions = [...team.kecamatan];
+            const thumbs = team.photos.slice(1,5).map((photo, i) => {
+                const more = team.photos.length > 5 && i === 3 ? `+${team.photos.length - 5}` : '';
+                return `<div class="team-gallery-thumb ${more?'more':''}" ${more?`data-more="${more}"`:''} onclick="openPublicPhoto(this.querySelector('img').src, '${String(photo.label+' - '+photo.masjid).replace(/'/g,'&#39;')}')"><img src="${photo.src}" alt="${photo.label} - ${photo.masjid}" loading="lazy" onerror="this.parentElement.style.display='none'"></div>`;
+            }).join('');
+            const regionHtml = regions.slice(0,4).map(r=>`<span class="team-gallery-region"><i class="fa-solid fa-location-dot"></i> ${r}</span>`).join('') + (regions.length>4 ? `<span class="team-gallery-region">+${regions.length-4} kecamatan</span>` : '');
+            const locationTitle = locations.length ? locations.slice(0,2).join(' • ') + (locations.length>2 ? ` • +${locations.length-2} lokasi` : '') : 'Lokasi pemeriksaan lapangan';
 
-        activeData.forEach(item => {
-            const photos = item.photos || [];
-            let validPhotosHTML = '';
-            let validPhotoCount = 0;
-            
-            photos.forEach((p, idx) => {
-                if (p && p.trim() !== '') {
-                    validPhotoCount++;
-                    validPhotosHTML += `
-                        <div>
-                            <img src="${p}" class="w-full h-24 object-cover rounded border">
-                            <p class="text-[10px] text-center text-gray-500 mt-1">${photoTitles[idx] || 'Dokumentasi'}</p>
-                        </div>`;
-                }
-            });
-
-            (item.additionalPhotos || []).forEach(p => {
-                if (p && p.data) {
-                    validPhotoCount++;
-                    validPhotosHTML += `<div><img src="${p.data}" class="w-full h-24 object-cover rounded border"><p class="text-[10px] text-center text-orange-700 mt-1">${p.name || 'Temuan / Gangguan'}</p></div>`;
-                }
-            });
-
-            if (validPhotosHTML !== '') {
-                container.innerHTML += `
-                    <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 shadow-sm flex flex-col justify-between">
-                        <div class="mb-3 flex justify-between items-start">
-                            <div>
-                                <span class="bg-amber-100 text-amber-800 font-bold text-[11px] px-2 py-0.5 rounded flex items-center gap-1 w-max mb-1">
-                                    <i class="fas fa-user-check"></i> ${item.petugas || 'Petugas'}
-                                </span>
-                                <h3 class="font-bold text-gray-800 text-sm">${item.masjid}</h3>
-                                <p class="text-xs text-gray-500"><i class="fas fa-map-marker-alt text-red-500"></i> Kec. ${item.kecamatan} - Kel/Desa: ${item.desa || '-'}</p>
+            container.insertAdjacentHTML('beforeend', `
+                <article class="team-gallery-card">
+                    <div class="team-gallery-head">
+                        <div class="team-gallery-identity">
+                            <div class="team-gallery-avatar"><span>${initials}</span></div>
+                            <div style="min-width:0">
+                                <div class="team-gallery-name" title="${team.name.replace(/"/g,'&quot;')}">${team.name}</div>
+                                <div class="team-gallery-sub"><i class="fa-solid fa-clipboard-check"></i> Tim pemeriksaan lapangan</div>
                             </div>
-                            <span class="bg-green-100 text-green-800 font-bold text-[10px] px-2 py-0.5 rounded">${item.tanggal || item.tahun || '-'}</span>
                         </div>
-                        <div class="grid grid-cols-2 gap-2">
-                            ${validPhotosHTML}
+                        <span class="team-gallery-count"><i class="fa-solid fa-camera"></i> ${team.photos.length} foto</span>
+                    </div>
+                    <div class="team-gallery-cover" onclick="openPublicPhoto(this.querySelector('img').src, '${String(first.label+' - '+first.masjid+' - '+team.name).replace(/'/g,'&#39;')}')">
+                        <img src="${first.src}" alt="${first.label} - ${first.masjid} - ${team.name}" loading="lazy" onerror="this.closest('.team-gallery-card').style.display='none'">
+                        <div class="team-gallery-cover-info">
+                            <div class="team-gallery-cover-title">${first.masjid}</div>
+                            <div class="team-gallery-cover-location"><i class="fa-solid fa-location-dot"></i> ${locationTitle}</div>
                         </div>
-                    </div>`;
-            }
+                    </div>
+                    ${thumbs ? `<div class="team-gallery-photos">${thumbs}</div>` : ''}
+                    <div class="team-gallery-footer">
+                        <div class="team-gallery-stats">
+                            <div class="team-gallery-stat"><strong>${team.records}</strong><span>Kegiatan</span></div>
+                            <div class="team-gallery-stat"><strong>${team.locations.size}</strong><span>Lokasi</span></div>
+                            <div class="team-gallery-stat"><strong>${team.photos.length}</strong><span>Foto</span></div>
+                        </div>
+                        <div class="team-gallery-regions">${regionHtml || '<span class="team-gallery-region">Wilayah belum dicantumkan</span>'}</div>
+                    </div>
+                </article>`);
         });
-
-        if (container.innerHTML.trim() === '') {
-            container.innerHTML = `<div class="col-span-full text-center py-6 text-gray-400">Tidak ada foto dokumentasi yang di-upload.</div>`;
-        }
     }
+
+    function openPublicPhoto(src, caption) { const modal=document.getElementById('publicPhotoLightbox'), image=document.getElementById('publicPhotoLightboxImage'), captionEl=document.getElementById('publicPhotoLightboxCaption'); if(!modal||!image)return; image.src=src; image.alt=caption||'Dokumentasi pemeriksaan'; if(captionEl)captionEl.textContent=caption||'Dokumentasi pemeriksaan'; modal.classList.add('show'); document.body.style.overflow='hidden'; }
+    function closePublicPhoto() { const modal=document.getElementById('publicPhotoLightbox'); if(!modal)return; modal.classList.remove('show'); document.body.style.overflow=''; const image=document.getElementById('publicPhotoLightboxImage'); if(image)image.src=''; }
+
 
     function renderPublicTable(activeData) {
         const tbody = document.getElementById('publicTableBody');
@@ -2848,7 +2938,7 @@
         const tahun=getExportYears(data);
 
         const rows=[
-            [`DOKUMENTASI PENGAWASAN PEMOTONGAN HEWAN KURBAN KOTA AMBON TAHUN ${tahun}`],
+            [`DATA PENGAWASAN PEMOTONGAN HEWAN KURBAN KOTA AMBON TAHUN ${tahun}`],
             [`Nama Petugas: ${petugasName}`],
             [`Tahun: ${tahun}`],
             [],
@@ -2998,7 +3088,7 @@
         const tahun=getExportYears(data);
 
         const rows=[
-            [`DOKUMENTASI PENGAWASAN PEMOTONGAN HEWAN KURBAN KOTA AMBON TAHUN ${tahun}`],
+            [`DATA PENGAWASAN PEMOTONGAN HEWAN KURBAN KOTA AMBON TAHUN ${tahun}`],
             [`Nama Petugas: ${petugasHeader}`],
             [`Tahun: ${tahun}`],
             [],
@@ -3597,5 +3687,6 @@
 })();
 </script>
 
+<div id="publicPhotoLightbox" class="public-photo-lightbox" onclick="if(event.target===this) closePublicPhoto()"><button type="button" class="public-photo-close" aria-label="Tutup" onclick="closePublicPhoto()"><i class="fa-solid fa-xmark"></i></button><div class="public-photo-viewer"><img id="publicPhotoLightboxImage" src="" alt="Dokumentasi pemeriksaan"><div class="public-photo-caption"><span id="publicPhotoLightboxCaption">Dokumentasi pemeriksaan</span><span><i class="fa-solid fa-magnifying-glass-plus"></i> Klik di luar foto untuk menutup</span></div></div></div>
 </body>
 </html>

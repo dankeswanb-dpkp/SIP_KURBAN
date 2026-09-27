@@ -1,0 +1,3505 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIP-KURBAN • V10 KOLASE - Sistem Terpadu Dinas Pertanian & Ketahanan Pangan Kota Ambon</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f3f4f6; color: #333; margin: 0; padding: 0; }
+
+        .gradient-header, .header-legacy { 
+            background: linear-gradient(135deg, #0d3b11, #1b5e20, #2e7d32); 
+            color: white; padding: 25px 20px; border-radius: 12px; text-align: center; margin-bottom: 25px; position: relative; box-shadow: 0 6px 18px rgba(0,0,0,0.15); border-bottom: 4px solid #81c784;
+        }
+        .header-legacy .agency-tag { display: inline-block; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(5px); padding: 4px 14px; border-radius: 20px; font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; color: #a5d6a7; margin-bottom: 8px; border: 1px solid rgba(255, 255, 255, 0.2); }
+        .header-legacy h1 { font-size: 1.5rem; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 4px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .header-legacy h2 { font-size: 1.1rem; font-weight: 600; color: #e8f5e9; margin-bottom: 10px; }
+        .header-legacy p { font-size: 0.85rem; opacity: 0.9; font-weight: 400; }
+
+        .user-bar { position: absolute; right: 15px; top: 15px; background: rgba(0,0,0,0.25); backdrop-filter: blur(4px); padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; display: flex; align-items: center; gap: 10px; border: 1px solid rgba(255,255,255,0.1); }
+        .btn-logout { background: #d32f2f; color: white; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: bold; }
+        
+        .container-custom { max-width: 1200px; margin: 0 auto; }
+        .nav-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+        .nav-tab { flex: 1; min-width: 140px; padding: 12px 10px; text-align: center; background: #dcdcdc; color: #555; font-weight: bold; font-size: 0.85rem; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+        .nav-tab.active { background: #2e7d32; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.15); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); margin-bottom: 20px; }
+        .card h2 { font-size: 1.1rem; color: #1b5e20; margin-bottom: 15px; border-bottom: 2px solid #e0e0e0; padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .export-btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+        .btn-export { padding: 6px 12px; font-size: 0.8rem; border-radius: 4px; border: none; color: white; font-weight: bold; cursor: pointer; }
+        .btn-excel { background-color: #2e7d32; }
+        .btn-word { background-color: #1565c0; }
+        .btn-print { background-color: #0277bd; }
+        .btn-collage { background-color: #d97706; }
+        
+        .btn-danger { background-color: #d32f2f; color: white; border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: bold; }
+        .btn-warning { background-color: #f59e0b; color: white; border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: bold; }
+        .btn-add { background-color: #0277bd; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
+
+        .form-group { margin-bottom: 12px; }
+        label { display: block; font-size: 0.85rem; font-weight: bold; margin-bottom: 5px; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 0.9rem; }
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+        
+        button.btn-primary { background-color: #2e7d32; color: white; border: none; padding: 12px 20px; font-size: 0.95rem; font-weight: bold; border-radius: 5px; cursor: pointer; width: 100%; transition: background 0.3s; }
+        button.btn-primary:hover { background-color: #1b5e20; }
+
+        .search-bar { margin-bottom: 15px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        
+        .table-wrapper { width: 100%; overflow-x: auto; }
+        table.legacy-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 10px; }
+        table.legacy-table th, table.legacy-table td { border: 1px solid #ddd; padding: 8px; text-align: left; vertical-align: middle; }
+        table.legacy-table th { background-color: #2e7d32; color: white; text-align: center; }
+
+        .photo-preview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 10px; }
+        .photo-box { border: 2px dashed #bbb; border-radius: 6px; padding: 8px; text-align: center; background: #fafafa; }
+        .photo-box img { width: 100%; height: 100px; object-fit: cover; border-radius: 4px; display: none; margin-bottom: 5px; border: 1px solid #ccc; }
+
+        #loadingOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); color:white; justify-content:center; align-items:center; z-index:9999; font-size:1.2rem; }
+
+        .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
+        .modal-content { background-color: white; border-radius: 10px; padding: 20px; width: 95%; max-width: 650px; max-height: 90vh; overflow-y: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #2e7d32; padding-bottom: 10px; margin-bottom: 15px; }
+        .modal-header h3 { color: #1b5e20; font-size: 1.1rem; font-weight:bold; }
+        .modal-footer { display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #eee; padding-top: 10px; }
+        .no-select { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+
+        :root {
+            --primary:#166534; --primary-dark:#0f3d20; --primary-soft:#ecfdf5;
+            --accent:#d4a72c; --ink:#17211b; --muted:#64748b; --line:#e2e8f0;
+            --surface:#ffffff; --page:#f5f7f6;
+        }
+        html { scroll-behavior:smooth; }
+        body {
+            background:
+                radial-gradient(circle at 10% 0%, rgba(22,101,52,.07), transparent 28%),
+                radial-gradient(circle at 90% 5%, rgba(212,167,44,.06), transparent 25%),
+                var(--page);
+            color:var(--ink);
+        }
+        .container-custom { max-width:1380px; }
+        .header-legacy {
+            background:linear-gradient(135deg,#0b3b1d 0%,#14532d 48%,#166534 100%);
+            border:1px solid rgba(255,255,255,.12);
+            border-bottom:4px solid #d4a72c;
+            border-radius:18px;
+            padding:30px 24px;
+            box-shadow:0 14px 35px rgba(15,61,32,.18);
+            overflow:hidden;
+        }
+        .header-legacy:after {
+            content:""; position:absolute; inset:auto -10% -55px auto; width:280px; height:180px;
+            background:rgba(255,255,255,.06); border-radius:50%;
+        }
+        .header-legacy h1 { font-size:clamp(1.15rem,2.2vw,1.75rem); letter-spacing:.8px; }
+        .header-legacy h2 { font-size:clamp(.95rem,1.6vw,1.15rem); }
+        .nav-tabs { gap:9px; position:sticky; top:8px; z-index:40; padding:6px 0; }
+        .nav-tab {
+            flex:1 1 150px; min-height:46px; display:flex; align-items:center; justify-content:center;
+            background:rgba(255,255,255,.9); border:1px solid var(--line); color:#475569;
+            border-radius:12px; box-shadow:0 3px 12px rgba(15,23,42,.05);
+            transition:transform .2s,box-shadow .2s,background .2s;
+        }
+        .nav-tab:hover { transform:translateY(-1px); box-shadow:0 6px 18px rgba(15,23,42,.09); }
+        .nav-tab.active { background:linear-gradient(135deg,#166534,#15803d); box-shadow:0 7px 18px rgba(22,101,52,.22); }
+        .card,.bg-white { border-radius:16px !important; box-shadow:0 6px 20px rgba(15,23,42,.055) !important; }
+        .card { border:1px solid #edf1ee; }
+        input,select,textarea { border-color:#d8e0db; background:#fff; transition:border-color .2s,box-shadow .2s; }
+        input:focus,select:focus,textarea:focus { border-color:#34a853 !important; box-shadow:0 0 0 3px rgba(52,168,83,.12); outline:none; }
+        table.legacy-table { border-collapse:separate; border-spacing:0; overflow:hidden; border:1px solid var(--line); border-radius:12px; }
+        table.legacy-table th { background:linear-gradient(135deg,#14532d,#166534) !important; border-color:#267244 !important; position:sticky; top:0; z-index:2; font-size:.76rem; letter-spacing:.02em; }
+        table.legacy-table td { border-color:#edf0ee; background:#fff; }
+        table.legacy-table tbody tr:nth-child(even) td { background:#fafcfb; }
+        table.legacy-table tbody tr:hover td { background:#f0fdf4; }
+        .btn-primary,.btn-add,.btn-export,.btn-danger,.btn-warning,.btn-logout { transition:transform .15s,filter .15s,box-shadow .15s; }
+        .btn-primary:hover,.btn-add:hover,.btn-export:hover,.btn-danger:hover,.btn-warning:hover,.btn-logout:hover { transform:translateY(-1px); filter:brightness(1.03); box-shadow:0 5px 12px rgba(15,23,42,.12); }
+        .search-bar { background:#f8faf9; border:1px solid #e5ebe7; padding:10px; border-radius:12px; }
+        #petugasTablesContainer { display:flex; flex-direction:column; gap:18px; }
+        .kecamatan-group { background:#fff; border:1px solid #e3ebe5; border-radius:16px; overflow:hidden; box-shadow:0 7px 22px rgba(15,23,42,.055); }
+        .kecamatan-group-header { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; padding:15px 18px; background:linear-gradient(135deg,#effaf2,#f8fcf9); border-bottom:1px solid #dfe9e1; }
+        .kecamatan-title { display:flex; align-items:center; gap:10px; font-weight:800; color:#14532d; }
+        .kecamatan-badge { display:inline-flex; align-items:center; justify-content:center; min-width:32px; height:25px; padding:0 9px; border-radius:999px; background:#166534; color:#fff; font-size:.72rem; font-weight:800; }
+        .kecamatan-meta { display:flex; gap:7px; flex-wrap:wrap; }
+        .kecamatan-stat { padding:5px 9px; border-radius:999px; background:#fff; border:1px solid #dfe8e1; font-size:.7rem; font-weight:700; color:#52615a; }
+        .kecamatan-table-wrap { padding:0 12px 12px; overflow-x:auto; }
+        .kecamatan-empty { padding:18px; color:#94a3b8; text-align:center; font-size:.82rem; }
+
+        .collage-download-btn {
+            width:100%; margin-top:10px; padding:9px 12px; border:0; border-radius:9px;
+            background:linear-gradient(135deg,#166534,#15803d); color:#fff; font-weight:800;
+            font-size:.75rem; cursor:pointer; display:flex; align-items:center; justify-content:center;
+            gap:7px; transition:transform .15s,filter .15s,box-shadow .15s;
+        }
+        .collage-download-btn:hover { transform:translateY(-1px); filter:brightness(1.04); box-shadow:0 5px 12px rgba(22,101,52,.18); }
+        .collage-download-btn:disabled { opacity:.65; cursor:wait; transform:none; }
+
+        @media(max-width:640px) {
+            body { padding:8px !important; }
+            .header-legacy { padding:22px 14px; }
+            .user-bar { position:static!important; margin:14px auto 0; width:max-content; max-width:100%; font-size:.7rem; }
+            .nav-tabs { position:static; }
+            .nav-tab { min-width:calc(50% - 6px); font-size:.72rem; padding:9px 7px; }
+            .kecamatan-group-header { padding:12px; }
+        }
+        @media print {
+            body { background:#fff!important; }
+            .nav-tabs,.search-bar,.export-btn-group,#userBar { display:none!important; }
+            .card,.kecamatan-group { box-shadow:none!important; }
+        }
+
+        /* ===== PUBLIC DASHBOARD VISUAL - mengikuti gaya SIP-KURBAN Kota Ambon ===== */
+        .public-dashboard{max-width:1380px;margin:0 auto;padding:0 2px 28px}
+        .public-panel,.public-card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;box-shadow:0 6px 20px rgba(15,23,42,.055)}
+        .public-panel{padding:18px}
+        .filter-layout{display:flex;gap:18px;align-items:end;justify-content:space-between}
+        .filter-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;flex:1}
+        .filter-field label{display:block;font-size:.72rem;font-weight:700;color:#475569;margin:0 0 6px;text-transform:uppercase;letter-spacing:.05em}
+        .select-wrap,.search-wrap{position:relative}
+        .select-wrap select,.search-wrap input{width:100%;height:42px;background:#f8fafc;border:1px solid #cbd5e1;border-radius:9px;padding:0 34px 0 12px;font-size:.82rem;color:#334155;outline:none}
+        .search-wrap input{padding-left:36px}
+        .select-wrap i{position:absolute;right:12px;top:14px;color:#94a3b8;font-size:.72rem;pointer-events:none}
+        .search-wrap i{position:absolute;left:13px;top:13px;color:#94a3b8}
+        .select-wrap select:focus,.search-wrap input:focus{border-color:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,.12)}
+        .filter-actions{display:flex;gap:9px;flex-shrink:0}
+        .btn-refresh,.btn-login-public{height:42px;padding:0 15px;border-radius:9px;font-size:.8rem;font-weight:700;display:flex;align-items:center;gap:8px;cursor:pointer;border:1px solid #cbd5e1}
+        .btn-refresh{background:#f1f5f9;color:#334155}.btn-login-public{background:#047857;color:#fff;border-color:#047857}
+        .kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+        .kpi-card{min-height:145px;border-radius:16px;padding:23px;display:flex;justify-content:space-between;align-items:flex-start;box-shadow:0 6px 20px rgba(15,23,42,.07);border:1px solid #e2e8f0;border-bottom:4px solid #10b981;background:#fff}
+        .kpi-card p{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#64748b;margin:0}
+        .kpi-card h3{font-size:2.25rem;line-height:1;font-weight:900;margin:12px 0 7px;color:#1e293b}
+        .kpi-card span{font-size:.7rem;color:#64748b}.kpi-main{background:linear-gradient(135deg,#064e3b,#022c22);color:#fff;border-bottom-color:#d4a72c}.kpi-main p,.kpi-main span{color:#a7f3d0}.kpi-main h3{color:#fff}
+        .kpi-sapi{border-bottom-color:#059669}.kpi-kambing{border-bottom-color:#d4a72c}.kpi-domba{border-bottom-color:#2563eb}
+        .kpi-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.35rem;background:#ecfdf5;color:#059669}
+        .kpi-main .kpi-icon{background:rgba(212,167,44,.16);color:#facc15;border:1px solid rgba(212,167,44,.3)}.kpi-kambing .kpi-icon{background:#fffbeb;color:#d97706}.kpi-domba .kpi-icon{background:#eff6ff;color:#2563eb}
+        .chart-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+        .public-card{padding:22px}.chart-title{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #f1f5f9;padding-bottom:12px;margin-bottom:12px}
+        .chart-title h2,.section-heading h2{font-size:.96rem;font-weight:800;color:#1e293b;margin:0;display:flex;align-items:center;gap:9px}.chart-title h2 i,.section-heading h2 i{color:#059669}
+        .chart-area{height:285px;position:relative}.chart-badge,.standard-badge,.data-count-badge{font-size:.65rem;font-weight:700;padding:5px 9px;border-radius:999px;white-space:nowrap}
+        .chart-badge.green{background:#d1fae5;color:#065f46}.chart-badge.blue{background:#dbeafe;color:#1e40af}.chart-badge.gold{background:#fef3c7;color:#92400e}
+        .inspection-card{padding:24px}.section-heading{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:20px}.section-heading p{font-size:.72rem;color:#64748b;margin:5px 0 0}.standard-badge{background:#ecfdf5;border:1px solid #bbf7d0;color:#047857}
+        .inspection-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+        .inspection-grid>div{border:1px solid #e2e8f0!important;border-radius:14px!important;box-shadow:0 3px 12px rgba(15,23,42,.04)!important}
+        .official-info{background:linear-gradient(135deg,#0f172a,#064e3b);border-radius:16px;padding:24px;color:#fff;box-shadow:0 10px 25px rgba(6,78,59,.18)}
+        .official-heading h2{color:#fff}.official-heading h2 i{color:#fbbf24}.official-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.official-item{padding:17px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}.official-item-title{display:flex;justify-content:space-between;gap:10px;color:#fbbf24;font-weight:700;font-size:.78rem}.official-item-title small{color:#94a3b8;font-weight:600}.official-item p{font-size:.72rem;line-height:1.65;color:#cbd5e1;margin:9px 0 0}
+        .gallery-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.gallery-grid:empty:after{content:'Belum ada foto dokumentasi pada data yang ditampilkan.';grid-column:1/-1;text-align:center;padding:30px;color:#94a3b8;font-size:.8rem}
+        .table-card{padding:0;overflow:hidden}.table-card .section-heading{padding:22px 24px;margin:0;border-bottom:1px solid #f1f5f9}.data-count-badge{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}.table-scroll{overflow-x:auto}.public-table{width:100%;border-collapse:collapse;font-size:.76rem}.public-table th{background:#0f172a;color:#fff;padding:13px 12px;text-align:left;white-space:nowrap}.public-table th:nth-child(5){background:#064e3b}.public-table th:nth-child(6){background:#78350f}.public-table th:nth-child(7){background:#1e3a8a}.public-table td{padding:11px 12px;border-bottom:1px solid #e2e8f0;color:#475569;background:#fff}.public-table tbody tr:hover td{background:#f8fafc}
+        .announcement-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+        @media(max-width:1000px){.filter-layout{flex-direction:column;align-items:stretch}.filter-grid,.kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.filter-actions{justify-content:flex-end}.inspection-grid{grid-template-columns:1fr}.gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+        @media(max-width:700px){.public-dashboard{padding:0}.filter-grid,.kpi-grid,.chart-grid,.official-grid,.gallery-grid,.announcement-grid{grid-template-columns:1fr}.filter-actions{flex-direction:column}.btn-refresh,.btn-login-public{width:100%;justify-content:center}.chart-area{height:250px}.section-heading{align-items:flex-start;flex-direction:column}.kpi-card{min-height:125px;padding:18px}.kpi-card h3{font-size:1.9rem}}
+
+    
+/* Tampilan informasi/pengumuman resmi dinas */
+.public-info-announcement, .info-announcement, .announcement-box {
+  background: linear-gradient(135deg,#fff7ed,#fffbeb);
+  border: 1px solid #f59e0b;
+  border-left: 6px solid #f59e0b;
+  border-radius: 14px;
+  box-shadow: 0 8px 22px rgba(0,0,0,.06);
+}
+.public-info-announcement .announcement-title, .info-announcement .announcement-title {
+  color:#92400e; font-weight:800;
+}
+</style>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style id="photo-collage-download-style">
+.photo-collage-modal{position:fixed;inset:0;background:rgba(15,23,42,.72);z-index:9999;display:none;align-items:center;justify-content:center;padding:16px}
+.photo-collage-modal.show{display:flex}
+.photo-collage-box{background:#fff;width:min(980px,100%);max-height:94vh;overflow:auto;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.photo-collage-head{padding:16px 20px;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.photo-collage-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:18px}
+.photo-collage-item{position:relative;border:2px solid #e5e7eb;border-radius:10px;overflow:hidden;cursor:pointer;background:#f8fafc;aspect-ratio:1/1}
+.photo-collage-item.selected{border-color:#059669;box-shadow:0 0 0 3px rgba(5,150,105,.15)}
+.photo-collage-item img{width:100%;height:100%;object-fit:cover}
+.photo-collage-check{position:absolute;top:7px;right:7px;background:#fff;border-radius:999px;padding:4px;box-shadow:0 2px 7px rgba(0,0,0,.2)}
+.photo-collage-footer{padding:16px 20px;border-top:1px solid #e5e7eb;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.photo-collage-note{font-size:13px;color:#64748b}
+.photo-collage-btn{border:0;border-radius:9px;padding:10px 15px;font-weight:700;cursor:pointer}
+.photo-collage-btn.primary{background:#059669;color:white}
+.photo-collage-btn.secondary{background:#e2e8f0;color:#0f172a}
+.photo-collage-btn:disabled{opacity:.45;cursor:not-allowed}
+.photo-collage-canvas{position:fixed;left:-100000px;top:-100000px;width:1200px;background:white}
+@media(max-width:700px){.photo-collage-grid{grid-template-columns:repeat(3,1fr)}}
+</style>
+
+
+<style id="photo-collage-selection-css">
+.photo-collage-item{position:relative!important;border:3px solid #e2e8f0!important}
+.photo-collage-item.selected{border-color:#059669!important;box-shadow:0 0 0 4px rgba(5,150,105,.16)!important}
+.photo-collage-item.selected:after{content:'✓ Dipilih';position:absolute;left:8px;bottom:8px;background:#059669;color:#fff;font-size:12px;font-weight:800;padding:5px 8px;border-radius:7px}
+</style>
+
+</head>
+<body class="p-2 md:p-4">
+
+<div id="loadingOverlay">⏳ Memproses Data...</div>
+
+<!-- MODAL EDIT DATA PEMOTONGAN -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>✏️ Edit Data Pemotongan</h3>
+            <span style="cursor:pointer; font-weight:bold;" onclick="closeEditModal()">✖</span>
+        </div>
+        <div class="modal-body">
+            <form id="editForm">
+                <input type="hidden" id="editId">
+                <div class="grid-3">
+                    <div class="form-group">
+                        <label>Tanggal Pelaksanaan</label>
+                        <input type="date" id="editTanggal" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Kecamatan</label>
+                        <select id="editKecamatan" required onchange="updateEditDesaOptions()">
+                            <option value="Sirimau">Sirimau</option>
+                            <option value="Nusaniwe">Nusaniwe</option>
+                            <option value="Teluk Ambon">Teluk Ambon</option>
+                            <option value="Baguala">Baguala</option>
+                            <option value="Leitimur Selatan">Leitimur Selatan</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Kelurahan/Desa</label>
+                        <select id="editDesaKelurahan" required></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Nama Masjid / Tempat</label>
+                    <input type="text" id="editMasjid" required>
+                </div>
+                <div class="form-group">
+                    <label>Alamat</label>
+                    <input type="text" id="editAlamat" required>
+                </div>
+                <div class="grid-3">
+                    <div class="form-group"><label>Sapi</label><input type="number" id="editSapi" min="0"></div>
+                    <div class="form-group"><label>Kambing</label><input type="number" id="editKambing" min="0"></div>
+                    <div class="form-group"><label>Domba</label><input type="number" id="editDomba" min="0"></div>
+                </div>
+
+                <div class="grid-2" style="background:#f0fdf4; padding:12px; border-radius:8px; border:1px solid #bbf7d0; margin-bottom:12px;">
+                    <div class="form-group">
+                        <label style="color:#166534;">🔍 Antemortem Status</label>
+                        <select id="editAntemortemStatus" required>
+                            <option value="1. Sehat / Normal">1. Sehat / Normal</option>
+                            <option value="2. Belum Cukup Umur">2. Belum Cukup Umur</option>
+                            <option value="3. Cacat Fisik">3. Cacat Fisik</option>
+                            <option value="4. Gejala PMK">4. Gejala PMK</option>
+                            <option value="5. Gejala LSD / Lato-lato">5. Gejala LSD / Lato-lato</option>
+                            <option value="6. Stres / Kelelahan berat">6. Stres / Kelelahan berat</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label style="color:#166534;">🥩 Postmortem Status</label>
+                        <select id="editPostmortemStatus" required>
+                            <option value="Sehat / Layak Konsumsi Total">Sehat / Layak Konsumsi Total</option>
+                            <option value="Afkir Sebagian (Temuan Cacing Hati)">Afkir Sebagian (Temuan Cacing Hati)</option>
+                            <option value="Afkir Total (Daging Tidak Layak)">Afkir Total (Daging Tidak Layak)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Tindakan Keswan</label>
+                    <input type="text" id="editTindakan" required>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" onclick="closeEditModal()" style="padding:8px 15px; border-radius:4px; border:1px solid #ccc; background:#eee; cursor:pointer;">Batal</button>
+            <button type="button" onclick="saveEditData()" class="btn-primary" style="width:auto; padding:8px 20px;">💾 Simpan Perubahan</button>
+        </div>
+    </div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div id="loginModal" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl relative">
+        <button onclick="closeLoginModal()" class="absolute right-4 top-4 text-gray-400 hover:text-gray-600 font-bold">✖</button>
+        <div class="text-center mb-6">
+            <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full font-bold uppercase">SIP-KURBAN AMBON</span>
+            <h2 class="text-2xl font-extrabold text-green-900 mt-2">🔐 Login Sistem Input</h2>
+            <p class="text-gray-500 text-xs mt-1">Silakan masuk menggunakan akun Dinas, Petugas, atau Admin</p>
+        </div>
+        
+        <form id="loginForm" class="space-y-4">
+            <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Username</label>
+                <input type="text" id="loginUsername" required placeholder="Masukkan username" class="w-full p-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-600 outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Password</label>
+                <input type="password" id="loginPassword" required placeholder="Masukkan password" class="w-full p-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-600 outline-none">
+            </div>
+            <button type="submit" class="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-3 rounded-lg shadow-md transition">Masuk Ke Sistem</button>
+        </form>
+    </div>
+</div>
+
+<div class="container-custom">
+    <div class="header-legacy">
+        <span class="agency-tag">Pemerintah Kota Ambon</span>
+        <h1>DINAS PERTANIAN DAN KETAHANAN PANGAN</h1>
+        <h2>BIDANG PETERNAKAN DAN KESEHATAN HEWAN</h2>
+        <p>SIP-KURBAN: Sistem Pemetaan & Pemantauan Pemotongan Hewan Kurban</p>
+        
+        <div class="user-bar" id="userBar" style="display:none;">
+            <span>👤 <strong id="currentUsername">-</strong> (<span id="currentRole">-</span>)</span>
+            <button class="btn-logout" onclick="logout()">Logout / Kembali ke Dashboard Publik</button>
+        </div>
+    </div>
+
+    <div class="nav-tabs" id="navbar">
+        <div class="nav-tab active" id="tab-btn-public" onclick="switchTab('public-tab')">🌐 Dashboard Publik</div>
+        <div class="nav-tab" id="tab-btn-dashboard-petugas" onclick="switchTab('dashboard-petugas-tab')" style="display:none;">📊 Dashboard Petugas</div>
+        <div class="nav-tab" id="tab-btn-dashboard-admin" onclick="switchTab('dashboard-admin-tab')" style="display:none;">🛡️ Dashboard Admin</div>
+        <div class="nav-tab" id="tab-btn-dashboard-dinas" onclick="switchTab('dashboard-dinas-tab')" style="display:none;">🏛️ Dashboard Dinas</div>
+        <div class="nav-tab" id="tab-btn-input" onclick="switchTab('input-tab')" style="display:none;">➕ Input Pemotongan</div>
+        <div class="nav-tab" id="tab-btn-users" onclick="switchTab('users-tab')" style="display:none;">👥 Data Petugas & Pengumuman (Admin)</div>
+        <div class="nav-tab" id="tab-btn-database" onclick="switchTab('database-tab')" style="display:none;">🗃️ Master Database</div>
+        <div class="nav-tab" id="tab-btn-executive" onclick="switchTab('executive-tab')" style="display:none;">📊 Laporan Eksekutif</div>
+    </div>
+
+    <!-- TAB 0: DASHBOARD PUBLIK -->
+    <div id="public-tab" class="tab-content active no-select">
+        <main class="public-dashboard space-y-8">
+
+            <!-- FILTER & PENCARIAN -->
+            <section class="public-panel">
+                <div class="filter-layout">
+                    <div class="filter-grid">
+                        <div class="filter-field">
+                            <label for="filterTahun">Tahun Pelaksanaan</label>
+                            <div class="select-wrap">
+                                <select id="filterTahun" onchange="filterAll()"></select>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        <div class="filter-field">
+                            <label for="filterKecamatan">Kecamatan</label>
+                            <div class="select-wrap">
+                                <select id="filterKecamatan" onchange="filterAll()">
+                                    <option value="ALL">Semua Kecamatan</option>
+                                    <option value="Sirimau">Sirimau</option>
+                                    <option value="Nusaniwe">Nusaniwe</option>
+                                    <option value="Teluk Ambon">Teluk Ambon</option>
+                                    <option value="Baguala">Baguala</option>
+                                    <option value="Leitimur Selatan">Leitimur Selatan</option>
+                                </select>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        <div class="filter-field">
+                            <label for="sortOption">Urutkan Data</label>
+                            <div class="select-wrap">
+                                <select id="sortOption" onchange="filterAll()">
+                                    <option value="petugas_asc">Nama Petugas (A-Z)</option>
+                                    <option value="petugas_desc">Nama Petugas (Z-A)</option>
+                                    <option value="total_desc">Total Hewan (Terbanyak)</option>
+                                    <option value="total_asc">Total Hewan (Terdikit)</option>
+                                    <option value="kecamatan_asc">Kecamatan (A-Z)</option>
+                                    <option value="masjid_asc">Masjid / Lokasi (A-Z)</option>
+                                    <option value="tahun_desc">Tahun (Terbaru)</option>
+                                </select>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        <div class="filter-field">
+                            <label for="searchInput">Pencarian</label>
+                            <div class="search-wrap">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="text" id="searchInput" onkeyup="filterAll()" placeholder="Cari masjid / petugas...">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter-actions">
+                        <button onclick="refreshDashboard()" id="refreshDashboardBtn" class="btn-refresh">
+                            <i class="fa-solid fa-rotate-right"></i><span>Refresh</span>
+                        </button>
+                        <button onclick="showLoginModal()" class="btn-login-public">
+                            <i class="fa-solid fa-right-to-bracket"></i><span>Masuk Ke Sistem Input</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PENGUMUMAN -->
+            <div id="publicAdminAnnouncementsContainer" class="public-panel hidden">
+                <div class="section-heading compact">
+                    <h2><i class="fa-solid fa-bullhorn"></i> Informasi & Pengumuman Resmi Dinas</h2>
+                </div>
+                <div id="publicAdminAnnouncementsGrid" class="announcement-grid"></div>
+            </div>
+
+            <!-- KPI -->
+            <section class="kpi-grid">
+                <div class="kpi-card kpi-main">
+                    <div><p>Total Hewan Kurban</p><h3 id="cardTotalHewan">0</h3><span>Ekor Terdata Keseluruhan</span></div>
+                    <div class="kpi-icon"><i class="fa-solid fa-layer-group"></i></div>
+                </div>
+                <div class="kpi-card kpi-sapi">
+                    <div><p>Sapi / Lembu</p><h3 id="cardSapi">0</h3><span>Ekor Terdata</span></div>
+                    <div class="kpi-icon"><i class="fa-solid fa-cow"></i></div>
+                </div>
+                <div class="kpi-card kpi-kambing">
+                    <div><p>Kambing</p><h3 id="cardKambing">0</h3><span>Ekor Terdata</span></div>
+                    <div class="kpi-icon"><i class="fa-solid fa-paw"></i></div>
+                </div>
+                <div class="kpi-card kpi-domba">
+                    <div><p>Domba</p><h3 id="cardDomba">0</h3><span>Ekor Terdata</span></div>
+                    <div class="kpi-icon"><i class="fa-solid fa-paw"></i></div>
+                </div>
+            </section>
+
+            <!-- GRAFIK PEMERIKSAAN -->
+            <section class="chart-grid">
+                <div class="public-card">
+                    <div class="chart-title"><h2><i class="fa-solid fa-clipboard-check"></i> Hasil Pemeriksaan Antemortem (Sebelum Potong)</h2><span class="chart-badge green">Antemortem</span></div>
+                    <div class="chart-area"><canvas id="pieAntemortem"></canvas></div>
+                </div>
+                <div class="public-card">
+                    <div class="chart-title"><h2><i class="fa-solid fa-notes-medical"></i> Hasil Pemeriksaan Postmortem (Sesudah Potong)</h2><span class="chart-badge blue">Postmortem</span></div>
+                    <div class="chart-area"><canvas id="piePostmortem"></canvas></div>
+                </div>
+                <div class="public-card">
+                    <div class="chart-title"><h2><i class="fa-solid fa-chart-column"></i> Distribusi Hewan Per Kecamatan</h2><span class="chart-badge green">Bar Chart</span></div>
+                    <div class="chart-area"><canvas id="barKecamatanChart"></canvas></div>
+                </div>
+                <div class="public-card">
+                    <div class="chart-title"><h2><i class="fa-solid fa-chart-pie"></i> Proporsi Jenis Hewan Kurban</h2><span class="chart-badge gold">Doughnut</span></div>
+                    <div class="chart-area"><canvas id="doughnutChart"></canvas></div>
+                </div>
+            </section>
+
+            <!-- RINGKASAN ALUR -->
+            <section class="public-card inspection-card">
+                <div class="section-heading">
+                    <div>
+                        <h2><i class="fa-solid fa-arrows-spin"></i> Ringkasan Alur Pemeriksaan & Layak Konsumsi</h2>
+                        <p>Rincian status pemeriksaan sebelum dan sesudah penyembelihan berdasarkan jenis hewan.</p>
+                    </div>
+                    <span class="standard-badge">Standar ASUH (Aman, Sehat, Utuh, Halal)</span>
+                </div>
+                <div id="inspectionSummary" class="inspection-grid"></div>
+            </section>
+
+            <!-- INFORMASI RESMI -->
+            
+
+            <!-- GALERI -->
+            <section class="public-card">
+                <div class="section-heading">
+                    <div>
+                        <h2><i class="fa-solid fa-camera-retro"></i> Dokumentasi Pemeriksaan Lapangan</h2>
+                        <p>Dokumentasi kegiatan pemeriksaan yang berasal dari data petugas.</p>
+                    </div>
+                </div>
+                <div id="photoGalleryContainer" class="gallery-grid"></div>
+            </section>
+
+            <!-- MASTER DATA -->
+            <section class="public-card table-card">
+                <div class="section-heading">
+                    <div>
+                        <h2><i class="fa-solid fa-table-list"></i> Data Pemantauan Pemotongan Hewan Kurban</h2>
+                        <p>Rekapitulasi petugas dan lokasi masjid/tempat pemotongan di Kota Ambon.</p>
+                    </div>
+                    <span class="data-count-badge" id="publicDataCount">Data Publik</span>
+                </div>
+                <div class="table-scroll">
+                    <table id="publicDataTable" class="public-table">
+                        <thead><tr>
+                            <th>No</th><th>Petugas</th><th>Kecamatan</th><th>Jumlah Lokasi</th>
+                            <th>Sapi</th><th>Kambing</th><th>Domba</th><th>Total</th>
+                            <th>Hasil Antemortem</th><th>Hasil Postmortem</th>
+                        </tr></thead>
+                        <tbody id="publicTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- TAB 1: DASHBOARD PETUGAS -->
+    <div id="dashboard-petugas-tab" class="tab-content">
+        <div class="card" style="border-left:5px solid #2e7d32;">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                <div>
+                    <h2 style="margin-bottom:4px;">📊 Dashboard Petugas</h2>
+                    <p class="text-xs text-gray-500">Ringkasan data pemotongan yang didata oleh petugas yang sedang login.</p>
+                </div>
+                <button type="button" onclick="startNewEntry()" class="btn-add" style="padding:10px 16px;">➕ Input Data Pemotongan</button>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
+            <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-green-600"><p class="text-xs text-gray-500 font-bold">TOTAL DATA</p><h3 id="petugasDashData" class="text-2xl font-extrabold text-green-800">0</h3></div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-emerald-500"><p class="text-xs text-gray-500 font-bold">SAPI</p><h3 id="petugasDashSapi" class="text-2xl font-extrabold text-emerald-700">0</h3></div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-amber-500"><p class="text-xs text-gray-500 font-bold">KAMBING</p><h3 id="petugasDashKambing" class="text-2xl font-extrabold text-amber-700">0</h3></div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-indigo-500"><p class="text-xs text-gray-500 font-bold">DOMBA</p><h3 id="petugasDashDomba" class="text-2xl font-extrabold text-indigo-700">0</h3></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-5">
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-sm font-bold text-gray-800 mb-3">📊 Proporsi Antemortem</h2>
+                <div class="h-64 flex justify-center items-center"><canvas id="petugasPieAntemortem"></canvas></div>
+            </div>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-sm font-bold text-gray-800 mb-3">🥩 Proporsi Postmortem</h2>
+                <div class="h-64 flex justify-center items-center"><canvas id="petugasPiePostmortem"></canvas></div>
+            </div>
+        </div>
+        <div class="bg-gradient-to-r from-green-50 to-emerald-50 p-4 sm:p-5 rounded-2xl shadow-sm border border-green-100 mb-5">
+            <div class="mb-4">
+                <h2 class="text-base font-extrabold text-green-900">🔎 Ringkasan Alur Pemeriksaan</h2>
+                <p class="text-xs text-gray-600">Khusus data yang dimasukkan oleh petugas yang sedang login.</p>
+            </div>
+            <div id="petugasInspectionSummary" class="grid grid-cols-1 md:grid-cols-3 gap-3"></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-5">
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-sm font-bold text-gray-800 mb-3">🐄 Proporsi Jenis Hewan</h2>
+                <div class="h-64 flex justify-center items-center"><canvas id="petugasAnimalChart"></canvas></div>
+            </div>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-sm font-bold text-gray-800 mb-3">📷 Galeri Dokumentasi Saya</h2>
+                <div id="petugasPhotoGallery" class="grid grid-cols-2 gap-3 max-h-72 overflow-y-auto"></div>
+            </div>
+        </div>
+        <div class="card">
+            <h2 class="flex items-center justify-between gap-2 flex-wrap">
+                <span>🗃️ Data Pemotongan Saya</span>
+                <div class="export-btn-group">
+                    <button class="btn-export btn-excel" onclick="exportPetugasExcel()">📊 Excel</button>
+                    <button class="btn-export btn-word" onclick="exportPetugasWord()">📄 Word</button>
+                </div>
+            </h2>
+            <div class="table-wrapper">
+                <table class="legacy-table">
+                    <thead><tr><th>No</th><th>Tanggal</th><th>Kecamatan</th><th>Masjid / Lokasi</th><th>Sapi</th><th>Kambing</th><th>Domba</th><th>Postmortem</th><th>Aksi</th></tr></thead>
+                    <tbody id="petugasDashboardTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB: DASHBOARD ADMIN -->
+    <div id="dashboard-admin-tab" class="tab-content">
+        <div class="card" style="border-left:5px solid #1565c0;">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                <div>
+                    <h2 style="margin-bottom:4px;">🛡️ Dashboard Admin</h2>
+                    <p class="text-xs text-gray-500">Dashboard Admin menampilkan seluruh data pemotongan, sama seperti Dashboard Dinas.</p>
+                </div>
+                <div class="flex gap-2 flex-wrap">
+                    <button type="button" onclick="startNewEntry()" class="btn-add" style="background:#1565c0;">➕ Input Data Pemotongan</button>
+                    <button type="button" onclick="refreshAdminDashboard()" class="btn-add" style="background:#1565c0;">🔄 Refresh Semua Data</button>
+                </div>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-5">
+            <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-blue-600"><p class="text-xs text-gray-500 font-bold">TOTAL DATA</p><h3 id="adminDashData" class="text-2xl font-extrabold text-blue-800">0</h3></div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-green-600"><p class="text-xs text-gray-500 font-bold">SAPI</p><h3 id="adminDashSapi" class="text-2xl font-extrabold text-green-800">0</h3></div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-amber-500"><p class="text-xs text-gray-500 font-bold">KAMBING</p><h3 id="adminDashKambing" class="text-2xl font-extrabold text-amber-700">0</h3></div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-indigo-500"><p class="text-xs text-gray-500 font-bold">DOMBA</p><h3 id="adminDashDomba" class="text-2xl font-extrabold text-indigo-700">0</h3></div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-red-500"><p class="text-xs text-gray-500 font-bold">PETUGAS</p><h3 id="adminDashPetugas" class="text-2xl font-extrabold text-red-700">0</h3></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-5">
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-sm font-bold text-gray-800 mb-3">📊 Proporsi Antemortem Semua Hewan</h2>
+                <div class="h-64 flex justify-center items-center"><canvas id="adminPieAntemortem"></canvas></div>
+            </div>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-sm font-bold text-gray-800 mb-3">🥩 Proporsi Postmortem Semua Hewan</h2>
+                <div class="h-64 flex justify-center items-center"><canvas id="adminPiePostmortem"></canvas></div>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-green-50 to-emerald-50 p-4 sm:p-5 rounded-2xl shadow-sm border border-green-100 mb-5">
+            <div class="mb-4">
+                <h2 class="text-base font-extrabold text-green-900">🔎 Ringkasan Alur Pemeriksaan</h2>
+                <p class="text-xs text-gray-600">Antemortem menjadi dasar jumlah hewan yang dapat masuk ke tahap pemotongan dan Postmortem.</p>
+            </div>
+            <div id="adminInspectionSummary" class="grid grid-cols-1 md:grid-cols-3 gap-3"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-5">
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-sm font-bold text-gray-800 mb-3">🐄 Proporsi Jenis Hewan</h2>
+                <div class="h-64 flex justify-center items-center"><canvas id="adminAnimalChart"></canvas></div>
+            </div>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-sm font-bold text-gray-800 mb-3">📷 Galeri Dokumentasi</h2>
+                <div id="adminPhotoGallery" class="grid grid-cols-2 gap-3 max-h-72 overflow-y-auto"></div>
+            </div>
+        </div>
+
+        <div class="bg-white p-4 sm:p-5 rounded-xl shadow-sm border border-gray-100 mb-5">
+            <h2 class="text-base font-bold text-gray-800 mb-4 flex items-center gap-2">📊 Rekap Per Kecamatan</h2>
+            <div class="h-64"><canvas id="adminBarKecamatanChart"></canvas></div>
+        </div>
+
+        <div class="card">
+            <h2>
+                <span>📋 Seluruh Data Pemotongan</span>
+                <div class="export-btn-group">
+                    <button class="btn-export btn-excel" onclick="exportAdminExcel()">📊 Excel</button>
+                    <button class="btn-export btn-word" onclick="exportAdminWord()">📄 Word</button>
+                    <button class="btn-export btn-collage" onclick="exportCollageFromFilter('admin')">🖼️ Download Kolase</button>
+                </div>
+            </h2>
+            <div class="search-bar">
+                <input type="text" id="adminDashSearch" onkeyup="renderAdminDashboard()" placeholder="🔍 Cari petugas, kecamatan, desa, masjid, alamat..." style="max-width:420px;">
+                <select id="adminDashYear" onchange="renderAdminDashboard()" style="width:160px;"></select>
+            </div>
+            <div class="table-wrapper">
+                <table class="legacy-table" id="adminDashboardTable">
+                    <thead><tr><th>No</th><th>Petugas</th><th>Tanggal</th><th>Kecamatan</th><th>Desa/Kelurahan</th><th>Masjid/Tempat</th><th>Alamat</th><th>Sapi</th><th>Kambing</th><th>Domba</th><th>Antemortem</th><th>Postmortem</th><th>Tindakan</th><th>Foto</th><th>Aksi</th></tr></thead>
+                    <tbody id="adminDashboardTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB: DASHBOARD DINAS -->
+    <div id="dashboard-dinas-tab" class="tab-content">
+        <div class="card" style="border-left:5px solid #7c3aed;">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                <div>
+                    <h2 style="margin-bottom:4px;">🏛️ Dashboard Dinas</h2>
+                    <p class="text-xs text-gray-500">Membaca seluruh data pemotongan secara lengkap dari semua petugas.</p>
+                </div>
+                <button type="button" onclick="refreshDinasDashboard()" class="btn-add" style="background:#7c3aed;">🔄 Refresh Semua Data</button>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-5">
+            <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-purple-600"><p class="text-xs text-gray-500 font-bold">TOTAL DATA</p><h3 id="dinasDashData" class="text-2xl font-extrabold text-purple-800">0</h3></div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-green-600"><p class="text-xs text-gray-500 font-bold">SAPI</p><h3 id="dinasDashSapi" class="text-2xl font-extrabold text-green-800">0</h3></div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-amber-500"><p class="text-xs text-gray-500 font-bold">KAMBING</p><h3 id="dinasDashKambing" class="text-2xl font-extrabold text-amber-700">0</h3></div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-indigo-500"><p class="text-xs text-gray-500 font-bold">DOMBA</p><h3 id="dinasDashDomba" class="text-2xl font-extrabold text-indigo-700">0</h3></div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-red-500"><p class="text-xs text-gray-500 font-bold">PETUGAS</p><h3 id="dinasDashPetugas" class="text-2xl font-extrabold text-red-700">0</h3></div>
+        </div>
+        <div class="card">
+            <h2>
+                <span>📋 Seluruh Data Pemotongan Lengkap</span>
+                <div class="export-btn-group">
+                    <button class="btn-export btn-excel" onclick="exportDinasExcel()">📊 Excel</button>
+                    <button class="btn-export btn-word" onclick="exportDinasWord()">📄 Word</button>
+                    <button class="btn-export btn-collage" onclick="exportCollageFromFilter('dinas')">🖼️ Download Kolase</button>
+                </div>
+            </h2>
+            <div class="search-bar">
+                <input type="text" id="dinasDashSearch" onkeyup="renderDinasDashboard()" placeholder="🔍 Cari petugas, kecamatan, desa, masjid, alamat..." style="max-width:420px;">
+                <select id="dinasDashYear" onchange="renderDinasDashboard()" style="width:160px;"></select>
+            </div>
+            <div class="table-wrapper">
+                <table class="legacy-table" id="dinasDashboardTable">
+                    <thead><tr><th>No</th><th>Petugas</th><th>Tanggal</th><th>Kecamatan</th><th>Desa/Kelurahan</th><th>Masjid/Tempat</th><th>Alamat</th><th>Sapi</th><th>Kambing</th><th>Domba</th><th>Antemortem</th><th>Postmortem</th><th>Tindakan</th><th>Foto</th><th>Aksi</th></tr></thead>
+                    <tbody id="dinasDashboardTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 1: FORM INPUT -->
+    <div id="input-tab" class="tab-content">
+        <div class="card">
+            <h2 id="inputFormTitle">📱 Input Petugas</h2>
+            <input type="hidden" id="editingRecordId" value="">
+            <form id="qurbanForm">
+                <div class="grid-4">
+                    <div class="form-group" style="background:#e8f5e9; padding:8px; border-radius:6px; border:1px solid #a5d6a7;">
+                        <label style="color:#1b5e20;">📅 Tanggal Pelaksanaan</label>
+                        <input type="date" id="tanggal" required style="font-weight:bold; color:#1b5e20; background:white;">
+                    </div>
+                    <div class="form-group">
+                        <label>Kecamatan</label>
+                        <select id="kecamatan" required onchange="updateDesaOptions()">
+                            <option value="Sirimau">Sirimau</option>
+                            <option value="Nusaniwe">Nusaniwe</option>
+                            <option value="Teluk Ambon">Teluk Ambon</option>
+                            <option value="Baguala">Baguala</option>
+                            <option value="Leitimur Selatan">Leitimur Selatan</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Kelurahan/Desa(Negeri)</label>
+                        <select id="desaKelurahan" required></select>
+                    </div>
+                </div>
+                <div class="form-group"><label>Nama Masjid / Tempat Pemotongan</label><input type="text" id="namaMasjid" required placeholder="Contoh: Masjid Raya Alfatah"></div>
+                <div class="form-group"><label>Alamat / Nama Jalan</label><input type="text" id="lokasi" required placeholder="Contoh: Jl. Sultan Babullah"></div>
+                <div class="grid-3">
+                    <div class="form-group"><label>Total Sapi</label><input type="number" id="sapi" value="0" min="0"></div>
+                    <div class="form-group"><label>Total Kambing</label><input type="number" id="kambing" value="0" min="0"></div>
+                    <div class="form-group"><label>Total Domba</label><input type="number" id="domba" value="0" min="0"></div>
+                </div>
+
+                <div class="grid-2" style="background:#f0fdf4; padding:15px; border-radius:8px; border:1px solid #bbf7d0; margin-bottom:15px;">
+                    <div class="form-group">
+                        <label style="color:#166534;">🔍 Indikator Hasil Pemeriksaan Antemortem</label>
+                        <select id="antemortemStatus" required onchange="checkConditionContinuity()">
+                            <option value="1. Sehat / Normal">1. Sehat / Normal</option>
+                            <option value="2. Belum Cukup Umur">2. Belum Cukup Umur</option>
+                            <option value="3. Cacat Fisik">3. Cacat Fisik</option>
+                            <option value="4. Gejala PMK">4. Gejala PMK</option>
+                            <option value="5. Gejala LSD / Lato-lato">5. Gejala LSD / Lato-lato</option>
+                            <option value="6. Stres / Kelelahan berat">6. Stres / Kelelahan berat</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label style="color:#166534;">🥩 Hasil Pemeriksaan Postmortem</label>
+                        <select id="postmortemStatus" required onchange="checkConditionContinuity()">
+                            <option value="Sehat / Layak Konsumsi Total">Sehat / Layak Konsumsi Total</option>
+                            <option value="Afkir Sebagian (Temuan Cacing Hati)">Afkir Sebagian (Temuan Cacing Hati)</option>
+                            <option value="Afkir Total (Daging Tidak Layak)">Afkir Total (Daging Tidak Layak)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="continuationSection" class="hidden" style="background:#fffbe6; padding:15px; border-radius:8px; border:1px solid #ffe58f; margin-bottom:15px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                        <h4 style="font-weight:bold; color:#d48806; font-size:0.9rem;">⚠️ Rincian Hewan Mengalami Gangguan / Afkir</h4>
+                        <button type="button" class="btn-add" onclick="addDynamicRow()">➕ Tambah Jenis Hewan / Indikator Lain</button>
+                    </div>
+                    <div id="dynamicRowsContainer" class="space-y-3"></div>
+                </div>
+
+                <div class="form-group"><label>Tindakan Keswan</label><input type="text" id="tindakan" required placeholder="Contoh: Ditolak potong / Afkir Hati / Layak Potong"></div>
+
+                <div class="form-group" style="background:#f9f9f9; padding:12px; border-radius:6px; border:1px solid #ddd;">
+                    <label>📷 Foto Dokumentasi Lapangan (Opsional):</label>
+                    <div class="photo-preview-grid">
+                        <div class="photo-box">
+                            <span>(Foto 1)</span>
+                            <img id="prev1">
+                            <input type="file" id="foto1" accept="image/*" onchange="previewAndResizeImage(this, 'prev1', 0)">
+                        </div>
+                        <div class="photo-box">
+                            <span>(Foto 2)</span>
+                            <img id="prev2">
+                            <input type="file" id="foto2" accept="image/*" onchange="previewAndResizeImage(this, 'prev2', 1)">
+                        </div>
+                        <div class="photo-box">
+                            <span>(Foto 3)</span>
+                            <img id="prev3">
+                            <input type="file" id="foto3" accept="image/*" onchange="previewAndResizeImage(this, 'prev3', 2)">
+                        </div>
+                    </div>
+                    <div id="additionalPhotoSection" class="mt-4 hidden" style="background:#fff7ed; padding:12px; border-radius:8px; border:1px solid #fed7aa;">
+                        <div class="font-bold text-sm text-orange-800 mb-2">📷 Foto Dokumentasi Temuan / Gangguan</div>
+                        <p class="text-xs text-gray-600 mb-3">Foto tambahan hanya ditampilkan untuk indikator yang tidak sehat/tidak layak. Nama foto mengikuti nama gangguan/gejala yang dipilih.</p>
+                        <div id="additionalPhotoContainer" class="photo-preview-grid"></div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 15px;">
+                    <div class="flex gap-2">
+                        <button type="button" id="cancelEditBtn" onclick="cancelEditMode()" class="btn-warning" style="display:none; width:160px;">Batal Edit</button>
+                        <button type="button" id="saveDataBtn" onclick="submitData()" class="btn-primary">📱 Simpan ke Perangkat</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- TAB 2: DATA PETUGAS & ADMIN -->
+    <div id="users-tab" class="tab-content">
+        <div class="card" style="border-left: 5px solid #1565c0;">
+            <h2>📢 Input Text Pengumuman / Pemberitahuan Dashboard Publik</h2>
+            <div class="form-group">
+                <label>Judul Pengumuman / Informasi</label>
+                <input type="text" id="adminAnnouncementTitle" placeholder="Contoh: Himbauan Pelaksanaan Kurban H+1">
+            </div>
+            <div class="form-group">
+                <label>Isi Teks Pengumuman / Pemberitahuan</label>
+                <textarea id="adminAnnouncementContent" rows="4" placeholder="Tuliskan isi pengumuman atau himbauan resmi yang akan ditayangkan di Dashboard Publik..."></textarea>
+            </div>
+            <button type="button" onclick="saveAdminAnnouncement()" class="btn-primary" style="background-color: #1565c0; width:auto; padding: 8px 20px;">📢 Publisikan Pengumuman</button>
+            
+            <div class="mt-5 border-t pt-4">
+                <h3 class="text-sm font-bold text-gray-800 mb-3">Daftar Pengumuman Aktif:</h3>
+                <div id="adminAnnouncementList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>➕ Registrasi Petugas / Pengguna Baru</h2>
+            <form id="registerForm" onsubmit="registerUser(event)">
+                <div class="grid-2">
+                    <div class="form-group"><label>Nama Lengkap & Gelar</label><input type="text" id="regNama" required></div>
+                    <div class="form-group"><label>Username</label><input type="text" id="regUsername" required></div>
+                </div>
+                <div class="grid-3">
+                    <div class="form-group"><label>Password</label><input type="password" id="regPassword" required></div>
+                    <div class="form-group"><label>Role</label><select id="regRole"><option value="Tim">Tim</option><option value="Dinas">Dinas</option><option value="Admin">Admin</option></select></div>
+                    <div class="form-group"><label>Wilayah</label><select id="regWilayah"><option value="Sirimau">Sirimau</option><option value="Nusaniwe">Nusaniwe</option><option value="Teluk Ambon">Teluk Ambon</option><option value="Baguala">Baguala</option><option value="Leitimur Selatan">Leitimur Selatan</option><option value="Kota Ambon (All)">Kota Ambon (All)</option></select></div>
+                </div>
+                <button type="submit" class="btn-primary" style="background-color: #1565c0;">➕ Registrasikan Petugas</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Server Data Petugas</h2>
+            <div class="table-wrapper">
+                <table id="userTable" class="legacy-table">
+                    <thead><tr><th>No</th><th>Nama</th><th>Username</th><th>Role</th><th>Wilayah</th><th class="action-col">Aksi</th></tr></thead>
+                    <tbody id="userTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 3: MASTER DATABASE -->
+    <div id="database-tab" class="tab-content">
+        <div class="card">
+            <h2>
+                <span>🗃️ Master Database Pemotongan</span>
+                <div class="export-btn-group">
+                    <button class="btn-export btn-excel" onclick="exportMasterExcel()">📊 Excel</button>
+                    <button class="btn-export btn-word" onclick="exportMasterWord()">📄 Word</button>
+                    <button class="btn-export btn-collage" onclick="exportCollageFromFilter('master')">🖼️ Download Kolase</button>
+                </div>
+            </h2>
+            <p class="text-xs text-gray-500 mt-1">Urutan data: No, Kecamatan, Masjid, Alamat, Sapi, Kambing, Domba, Pemeriksaan, Foto, Aksi. Data baru tersimpan di perangkat; tekan <b>Kirim</b> untuk mengirim ke cloud.</p>
+            <div class="search-bar">
+                <label style="font-size:0.85rem; font-weight:bold; margin-bottom:0;">📅 Filter Tahun:</label>
+                <select id="filterTahunDatabase" onchange="renderData()" style="width:160px; font-weight:bold; background:#e8f5e9; border-color:#a5d6a7; padding:6px;"></select>
+                <input type="text" id="searchInputDb" placeholder="🔍 Cari masjid, alamat, desa, kecamatan..." onkeyup="renderData()" style="max-width:300px;">
+            </div>
+            <div id="petugasTablesContainer" class="space-y-8"></div>
+        </div>
+    </div>
+
+    <!-- TAB 4: LAPORAN EKSEKUTIF -->
+    <div id="executive-tab" class="tab-content">
+        <div class="card" id="reportPrintArea">
+            <h2>
+                <span>📊 Laporan Eksekutif Tahunan Pemotongan</span>
+                <div class="export-btn-group">
+                    <button class="btn-export btn-excel" onclick="exportReportExcel()">📊 Excel Rekapitulasi</button>
+                    <button class="btn-export btn-print" onclick="window.print()">🖨️ Cetak Laporan</button>
+                </div>
+            </h2>
+            <div class="search-bar" style="margin-top:10px;">
+                <label style="font-size:0.85rem; font-weight:bold; margin-bottom:0;">📅 Pilih Tahun Laporan:</label>
+                <select id="filterTahunExecutive" onchange="renderReport()" style="width:180px; font-weight:bold; background:#e8f5e9; border-color:#a5d6a7; padding:6px 10px;"></select>
+            </div>
+            <div class="table-wrapper">
+                <table id="kecamatanTable" class="legacy-table">
+                    <thead><tr><th>No</th><th>Kecamatan</th><th>Sapi</th><th>Kambing</th><th>Domba</th><th>Total Hewan</th></tr></thead>
+                    <tbody id="kecamatanTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxgo_7AC2iVjrraDrhEyoHqqMNw5jwFbUESzju16oihaUEkJjIzhWUhvh4yGXFtOxc/exec";
+
+    const desaMap = {
+        "Sirimau": ["Batu Merah", "Honipopu", "Ahusen", "Uritetu", "Rijali", "Amantelu", "Karang Panjang", "Waihoka", "Soya", "Hative Kecil", "Galala", "Batu Gajah", "Batu Meja", "Pandan Kasturi"],
+        "Nusaniwe": ["Urimessing", "Wainitu", "Benteng", "Nusaniwe", "Kudamati", "Mangga Dua", "Silale", "Waihaong", "Amahusu", "Latuhalat", "Seilale"],
+        "Teluk Ambon": ["Hative Besar", "Laha", "Tawiri", "Hunuth/Durian Patah", "Poka", "Rumah Tiga", "Wayame", "Tihu"],
+        "Baguala": ["Passo", "Lateri", "Halong", "Nania", "Waiheru", "Latta", "Negeri Lama"],
+        "Leitimur Selatan": ["Hatalai", "Naku", "Kilang", "Ema", "Hukurila", "Hutumuri", "Rutong", "Leahari"]
+    };
+
+    let currentUser = JSON.parse(localStorage.getItem('SIP_CURRENT_USER')) || null;
+    let cloudUsersLoaded = false;
+
+    let currentUploadedPhotos = [null, null, null];
+    let currentUploadedAdditionalPhotos = [];
+    localStorage.removeItem('SIP_QURBAN_LOCAL_DATA');
+    let localDataStore = [];
+    let cloudDataStore = [];
+    let dataStore = [];
+    let editingRecordId = null;
+    let adminAnnouncements = JSON.parse(localStorage.getItem('SIP_QURBAN_ADMIN_ANNOUNCEMENTS')) || [];
+    let userStore = JSON.parse(localStorage.getItem('SIP_USER_STORE')) || [
+        { id: 1, nama: "Rahmat, S.Si", username: "admin", password: "admin123", role: "Admin", wilayah: "Kota Ambon (All)" },
+        { id: 2, nama: "Ahmad, S.Pt", username: "tim1", password: "123456", role: "Tim", wilayah: "Sirimau" },
+        { id: 3, nama: "Kadis Pertanian", username: "dinas", password: "dinas123", role: "Dinas", wilayah: "Kota Ambon (All)" }
+    ];
+
+    let barChartInstance = null;
+    let doughnutChartInstance = null;
+    let pieAnteInstance = null;
+    let piePostInstance = null;
+    let adminPieAnteInstance = null;
+    let adminPiePostInstance = null;
+    let adminAnimalInstance = null;
+    let adminBarInstance = null;
+
+    window.onload = async function() {
+        showLoading(true, "Menghubungkan ke Server Cloud...");
+        const usersOnline = await fetchCloudUsers();
+        if (usersOnline && currentUser) {
+            const freshUser = userStore.find(u => String(u.username) === String(currentUser.username));
+            if (freshUser) {
+                currentUser = freshUser;
+                localStorage.setItem('SIP_CURRENT_USER', JSON.stringify(freshUser));
+            } else {
+                currentUser = null;
+                localStorage.removeItem('SIP_CURRENT_USER');
+            }
+        }
+        await fetchCloudAnnouncements();
+        await fetchCloudData();
+        showLoading(false);
+
+        if (currentUser) {
+            document.getElementById('currentUsername').innerText = currentUser.nama;
+            document.getElementById('currentRole').innerText = currentUser.role;
+            document.getElementById('userBar').style.display = 'flex';
+        }
+        document.getElementById('tanggal').valueAsDate = new Date();
+
+        applyRolePermissions();
+        updateDesaOptions();
+        renderPetugasDashboard();
+    };
+
+    async function fetchCloudUsers() {
+        try {
+            const res = await fetch(SCRIPT_URL + "?action=users&t=" + Date.now(), {
+                method: 'GET',
+                cache: 'no-store'
+            });
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const data = await res.json();
+
+            if (Array.isArray(data)) {
+                userStore = data;
+                cloudUsersLoaded = true;
+                localStorage.setItem('SIP_USER_STORE', JSON.stringify(userStore));
+                return true;
+            }
+            throw new Error('Format data pengguna dari server tidak valid');
+        } catch(e) {
+            cloudUsersLoaded = false;
+            console.warn("Gagal ambil data users cloud:", e);
+            return false;
+        }
+    }
+
+    async function authenticateUser(username, password) {
+        username = username.trim();
+        password = password.trim();
+
+        const online = await fetchCloudUsers();
+
+        if (online && Array.isArray(userStore)) {
+            const found = userStore.find(user =>
+                String(user.username || '').trim() === username &&
+                String(user.password || '').trim() === password
+            );
+            if (found) return found;
+            return null;
+        }
+
+        const defaultUsers = [
+            { id: 1, nama: "Rahmat, S.Si", username: "admin", password: "admin123", role: "Admin", wilayah: "Kota Ambon (All)" },
+            { id: 2, nama: "Ahmad, S.Pt", username: "tim1", password: "123456", role: "Tim", wilayah: "Sirimau" },
+            { id: 3, nama: "Kadis Pertanian", username: "dinas", password: "dinas123", role: "Dinas", wilayah: "Kota Ambon (All)" }
+        ];
+        return defaultUsers.find(user => user.username === username && user.password === password) || null;
+    }
+
+    async function fetchCloudAnnouncements() {
+        try {
+            let res = await fetch(SCRIPT_URL + "?action=announcements");
+            let data = await res.json();
+            if (data && data.length > 0) {
+                adminAnnouncements = data;
+                localStorage.setItem('SIP_QURBAN_ADMIN_ANNOUNCEMENTS', JSON.stringify(adminAnnouncements));
+                renderAdminAnnouncementsList();
+                renderPublicAdminAnnouncements();
+            }
+        } catch(e) { console.warn("Gagal ambil data pengumuman cloud"); }
+    }
+
+    function showLoading(show, message = "Memproses Data...") {
+        const overlay = document.getElementById('loadingOverlay');
+        overlay.innerText = `⏳ ${message}`;
+        overlay.style.display = show ? 'flex' : 'none';
+    }
+
+    function showLoginModal() {
+        document.getElementById('loginModal').classList.remove('hidden');
+    }
+
+    function closeLoginModal() {
+        document.getElementById('loginModal').classList.add('hidden');
+    }
+
+    function logout() {
+        localStorage.removeItem('SIP_CURRENT_USER');
+        currentUser = null;
+        document.getElementById('userBar').style.display = 'none';
+        applyRolePermissions();
+        switchTab('public-tab');
+    }
+
+    function applyRolePermissions() {
+        const btnPublic = document.getElementById('tab-btn-public');
+        const btnInput = document.getElementById('tab-btn-input');
+        const btnAdminDash = document.getElementById('tab-btn-dashboard-admin');
+        const btnDinasDash = document.getElementById('tab-btn-dashboard-dinas');
+        const btnUsers = document.getElementById('tab-btn-users');
+        const btnDatabase = document.getElementById('tab-btn-database');
+        const btnExecutive = document.getElementById('tab-btn-executive');
+        const btnPetugasDash = document.getElementById('tab-btn-dashboard-petugas');
+
+        btnPublic.style.display = currentUser ? 'none' : 'block';
+
+        if (!currentUser) {
+            [btnPetugasDash,btnAdminDash,btnDinasDash,btnInput,btnUsers,btnDatabase,btnExecutive].forEach(x=>{if(x)x.style.display='none';});
+            switchTab('public-tab');
+            return;
+        }
+
+        document.getElementById('userBar').style.display = 'flex';
+        document.getElementById('currentUsername').innerText = currentUser.nama;
+        document.getElementById('currentRole').innerText = currentUser.role;
+
+        btnInput.style.display = 'block';
+        btnDatabase.style.display = 'block';
+        btnDinasDash.style.display = currentUser.role === 'Dinas' ? 'block' : 'none';
+        btnAdminDash.style.display = currentUser.role === 'Admin' ? 'block' : 'none';
+        btnPetugasDash.style.display = currentUser.role === 'Tim' ? 'block' : 'none';
+        btnUsers.style.display = currentUser.role === 'Admin' ? 'block' : 'none';
+        btnExecutive.style.display = (currentUser.role === 'Admin') ? 'block' : 'none';
+
+        if (currentUser.role === 'Tim') {
+            switchTab('dashboard-petugas-tab');
+            renderPetugasDashboard();
+        } else if (currentUser.role === 'Dinas') {
+            switchTab('dashboard-dinas-tab');
+            renderDinasDashboard();
+        } else {
+            switchTab('dashboard-admin-tab');
+            renderAdminDashboard();
+            renderUserTable();
+            renderAdminAnnouncementsList();
+        }
+    }
+
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        
+        if (tabId === 'public-tab') document.getElementById('tab-btn-public').classList.add('active');
+        if (tabId === 'dashboard-petugas-tab') { document.getElementById('tab-btn-dashboard-petugas').classList.add('active'); renderPetugasDashboard(); }
+        if (tabId === 'dashboard-admin-tab') { document.getElementById('tab-btn-dashboard-admin').classList.add('active'); renderAdminDashboard(); }
+        if (tabId === 'dashboard-dinas-tab') { document.getElementById('tab-btn-dashboard-dinas').classList.add('active'); renderDinasDashboard(); }
+        if (tabId === 'input-tab') { if(currentUser) document.getElementById('tab-btn-input').classList.add('active'); }
+        if (tabId === 'users-tab') document.getElementById('tab-btn-users').classList.add('active');
+        if (tabId === 'database-tab') { document.getElementById('tab-btn-database').classList.add('active'); renderData(); }
+        if (tabId === 'executive-tab') { document.getElementById('tab-btn-executive').classList.add('active'); renderReport(); }
+    }
+
+    function updateDesaOptions() {
+        const kecSelect = document.getElementById('kecamatan').value;
+        const desaSelect = document.getElementById('desaKelurahan');
+        desaSelect.innerHTML = '';
+        (desaMap[kecSelect] || []).forEach(desa => {
+            const opt = document.createElement('option'); opt.value = desa; opt.innerText = desa;
+            desaSelect.appendChild(opt);
+        });
+    }
+
+    function updateEditDesaOptions() {
+        const kecSelect = document.getElementById('editKecamatan').value;
+        const desaSelect = document.getElementById('editDesaKelurahan');
+        desaSelect.innerHTML = '';
+        (desaMap[kecSelect] || []).forEach(desa => {
+            const opt = document.createElement('option'); opt.value = desa; opt.innerText = desa;
+            desaSelect.appendChild(opt);
+        });
+    }
+
+    function checkConditionContinuity() {
+        const ante = document.getElementById('antemortemStatus').value;
+        const post = document.getElementById('postmortemStatus').value;
+        const contSection = document.getElementById('continuationSection');
+        const container = document.getElementById('dynamicRowsContainer');
+
+        if (ante === "1. Sehat / Normal" && post === "Sehat / Layak Konsumsi Total") {
+            contSection.classList.add('hidden');
+            container.innerHTML = '';
+        } else {
+            contSection.classList.remove('hidden');
+            if (container.children.length === 0) {
+                addDynamicRow();
+            }
+        }
+        renderAdditionalPhotoInputs();
+    }
+
+    function addDynamicRow() {
+        const container = document.getElementById('dynamicRowsContainer');
+        const rowId = Date.now() + Math.random();
+        const div = document.createElement('div');
+        div.className = 'grid-3 bg-white p-3 rounded border border-gray-200 items-end relative';
+        div.id = `row-${rowId}`;
+        div.innerHTML = `
+            <div>
+                <label class="text-xs">Jenis Hewan</label>
+                <select class="dyn-jenis"><option value="Sapi">Sapi</option><option value="Kambing">Kambing</option><option value="Domba">Domba</option></select>
+            </div>
+            <div>
+                <label class="text-xs">Indikator / Detail Gangguan</label>
+                <select class="dyn-indikator" onchange="renderAdditionalPhotoInputs()">
+                    <option value="1. Sehat / Normal">1. Sehat / Normal</option>
+                    <option value="2. Belum Cukup Umur">2. Belum Cukup Umur</option>
+                    <option value="3. Cacat Fisik">3. Cacat Fisik</option>
+                    <option value="4. Gejala PMK">4. Gejala PMK</option>
+                    <option value="5. Gejala LSD / Lato-lato">5. Gejala LSD / Lato-lato</option>
+                    <option value="6. Stres / Kelelahan berat">6. Stres / Kelelahan berat</option>
+                    <option value="Afkir Sebagian (Temuan Cacing Hati)">Afkir Sebagian (Cacing Hati)</option>
+                    <option value="Afkir Total">Afkir Total</option>
+                </select>
+            </div>
+            <div class="flex gap-2 items-center">
+                <div class="w-full"><label class="text-xs">Jumlah</label><input type="number" class="dyn-jumlah" min="1" value="1"></div>
+                <button type="button" onclick="removeDynamicRow('row-${rowId}')" class="btn-danger mt-4">✖</button>
+            </div>
+        `;
+        container.appendChild(div);
+    }
+
+    function removeDynamicRow(id) { document.getElementById(id)?.remove(); }
+
+    function previewAndResizeImage(input, previewId, index) {
+        const file = input.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const maxWidth = 800;
+                    let width = img.width;
+                    let height = img.height;
+                    if (width > maxWidth) { height = (maxWidth / width) * height; width = maxWidth; }
+                    canvas.width = width; canvas.height = height;
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const resizedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+
+                    if (index < 3) {
+                        currentUploadedPhotos[index] = resizedDataUrl;
+                    } else {
+                        const additionalIndex = index - 3;
+                        currentUploadedAdditionalPhotos[additionalIndex] = {
+                            name: input.dataset.photoName || 'Temuan / Gangguan',
+                            data: resizedDataUrl
+                        };
+                    }
+
+                    const prevImg = document.getElementById(previewId);
+                    if(prevImg) {
+                        prevImg.src = resizedDataUrl;
+                        prevImg.style.display = 'block';
+                    }
+                };
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function getFindingIndicators() {
+        const indicators = [];
+        const ante = document.getElementById('antemortemStatus')?.value || '';
+        const post = document.getElementById('postmortemStatus')?.value || '';
+        if (ante && ante !== '1. Sehat / Normal') indicators.push(ante);
+        if (post && post !== 'Sehat / Layak Konsumsi Total') indicators.push(post);
+        document.querySelectorAll('#dynamicRowsContainer .dyn-indikator').forEach(el => {
+            const v = el.value;
+            if (v && !v.includes('Sehat / Normal')) indicators.push(v);
+        });
+        return [...new Set(indicators)];
+    }
+
+    function renderAdditionalPhotoInputs() {
+        const section = document.getElementById('additionalPhotoSection');
+        const container = document.getElementById('additionalPhotoContainer');
+        if(!section || !container) return;
+
+        const indicators = getFindingIndicators();
+        const oldByName = {};
+        currentUploadedAdditionalPhotos.forEach((p) => { if(p && p.name) oldByName[p.name] = p; });
+
+        container.innerHTML = '';
+        if(indicators.length === 0) {
+            section.classList.add('hidden');
+            currentUploadedAdditionalPhotos = [];
+            return;
+        }
+
+        section.classList.remove('hidden');
+        currentUploadedAdditionalPhotos = indicators.map(name => oldByName[name] || {name, data:null});
+
+        indicators.forEach((name, idx) => {
+            const safeId = 'addPhotoPrev_' + idx;
+            container.innerHTML += `
+                <div class="photo-box" style="border-color:#f59e0b;">
+                    <span class="font-bold text-orange-800">${name}</span>
+                    <img id="${safeId}" style="display:${currentUploadedAdditionalPhotos[idx].data ? 'block' : 'none'}">
+                    <input type="file" accept="image/*" data-photo-name="${name.replace(/"/g,'&quot;')}"
+                        onchange="previewAndResizeImage(this, '${safeId}', ${idx + 3})">
+                </div>`;
+            if(currentUploadedAdditionalPhotos[idx].data) {
+                setTimeout(() => {
+                    const img = document.getElementById(safeId);
+                    if(img) img.src = currentUploadedAdditionalPhotos[idx].data;
+                }, 0);
+            }
+        });
+    }
+
+    async function fetchCloudData() {
+        showLoading(true, "Sinkronisasi Master Database...");
+        try {
+            if(SCRIPT_URL) {
+                let res = await fetch(SCRIPT_URL);
+                cloudDataStore = await res.json();
+            }
+        } catch(e) {
+            console.warn("Server offline, menggunakan data lokal.");
+        } finally {
+            mergeStores();
+            showLoading(false);
+        }
+    }
+
+    function mergeStores() {
+        dataStore = Array.isArray(cloudDataStore) ? [...cloudDataStore] : [];
+        dataStore.sort((a, b) => (a.kecamatan || '').localeCompare(b.kecamatan || ''));
+        populateYearFilter();
+        renderPublicAdminAnnouncements();
+        filterAll();
+        renderPetugasDashboard();
+        renderData();
+        renderAdminDashboard();
+        renderDinasDashboard();
+    }
+
+    function getWorkingData() {
+        const cloud = Array.isArray(cloudDataStore) ? cloudDataStore : [];
+        const local = Array.isArray(localDataStore) ? localDataStore : [];
+        const cloudIds = new Set(cloud.map(x => String(x.id)));
+        return [...cloud, ...local.filter(x => !cloudIds.has(String(x.id)))];
+    }
+
+    function isLocalRecord(id) {
+        return localDataStore.some(x => String(x.id) === String(id));
+    }
+
+    function populateYearFilter() {
+        const filterTahunDb = document.getElementById('filterTahunDatabase');
+        const filterTahunExec = document.getElementById('filterTahunExecutive');
+        const filterTahunPub = document.getElementById('filterTahun');
+        
+        const selectedVal = filterTahunPub ? (filterTahunPub.value || String(new Date().getFullYear())) : String(new Date().getFullYear());
+
+        let years = [...new Set(getWorkingData().map(item => {
+            const dateVal = item.tanggal || item.tahun;
+            return dateVal ? String(dateVal).substring(0, 4) : String(new Date().getFullYear());
+        }))];
+        const currentYear = String(new Date().getFullYear());
+        if (!years.includes(currentYear)) years.push(currentYear);
+        years.sort((a, b) => b - a);
+
+        let optionsHtml = `<option value="ALL">Semua Tahun</option>`;
+        years.forEach(y => { optionsHtml += `<option value="${y}">${y}</option>`; });
+
+        if(filterTahunDb) filterTahunDb.innerHTML = optionsHtml;
+        if(filterTahunExec) filterTahunExec.innerHTML = optionsHtml;
+        if(filterTahunPub) {
+            filterTahunPub.innerHTML = optionsHtml;
+            filterTahunPub.value = selectedVal;
+        }
+    }
+
+    async function submitData() {
+        if (!currentUser) {
+            alert('Silakan login terlebih dahulu untuk menyimpan data.');
+            showLoginModal();
+            return;
+        }
+
+        const ante = document.getElementById('antemortemStatus').value;
+        const post = document.getElementById('postmortemStatus').value;
+
+        let dynamicData = [];
+        if (ante !== "1. Sehat / Normal" || post !== "Sehat / Layak Konsumsi Total") {
+            document.querySelectorAll('#dynamicRowsContainer > div').forEach(r => {
+                dynamicData.push({
+                    jenis: r.querySelector('.dyn-jenis').value,
+                    indikator: r.querySelector('.dyn-indikator').value,
+                    jumlah: parseInt(r.querySelector('.dyn-jumlah').value) || 0
+                });
+            });
+        }
+
+        const newItem = {
+            id: editingRecordId !== null ? editingRecordId : Date.now(),
+            tanggal: document.getElementById('tanggal').value,
+            kecamatan: document.getElementById('kecamatan').value,
+            desa: document.getElementById('desaKelurahan').value,
+            masjid: document.getElementById('namaMasjid').value,
+            alamat: document.getElementById('lokasi').value,
+            sapi: parseInt(document.getElementById('sapi').value) || 0,
+            kambing: parseInt(document.getElementById('kambing').value) || 0,
+            domba: parseInt(document.getElementById('domba').value) || 0,
+            antemortem: ante,
+            postmortem: post,
+            tindakan: document.getElementById('tindakan').value,
+            petugas: currentUser.nama,
+            photos: currentUploadedPhotos.slice(0, 3),
+            additionalPhotos: [...currentUploadedAdditionalPhotos],
+            rincianGangguan: dynamicData,
+            syncStatus: 'local'
+        };
+
+        try {
+            showLoading(true, editingRecordId !== null ? "Menyimpan perubahan ke perangkat..." : "Menyimpan data ke perangkat...");
+
+            if (editingRecordId !== null) {
+                const localIndex = localDataStore.findIndex(x => String(x.id) === String(editingRecordId));
+                if (localIndex >= 0) {
+                    localDataStore[localIndex] = newItem;
+                } else {
+                    await cloudMutation({action:'updateData', type:'updateData', data:newItem, id:editingRecordId}, null);
+                }
+            } else {
+                localDataStore.push(newItem);
+            }
+
+            localStorage.setItem('SIP_QURBAN_LOCAL_DATA', JSON.stringify(localDataStore));
+            alert(editingRecordId !== null
+                ? 'Perubahan berhasil disimpan pada perangkat.'
+                : 'Data berhasil disimpan pada perangkat. Silakan buka Master Database lalu tekan "Kirim ke Server" jika data siap dikirim.');
+
+            resetInputForm();
+            renderPetugasDashboard();
+            renderData();
+            switchTab(currentUser && currentUser.role==='Tim' ? 'dashboard-petugas-tab' : 'database-tab');
+        } catch (error) {
+            console.error(error);
+            alert('Gagal menyimpan data pada perangkat.');
+        } finally {
+            showLoading(false);
+        }
+    }
+
+    function resetInputForm() {
+        document.getElementById('qurbanForm').reset();
+        currentUploadedPhotos = [null, null, null];
+        currentUploadedAdditionalPhotos = [];
+        for(let i=1; i<=3; i++) {
+            const el = document.getElementById(`prev${i}`);
+            if(el) { el.src = ''; el.style.display = 'none'; }
+        }
+        document.getElementById('additionalPhotoContainer').innerHTML = '';
+        document.getElementById('additionalPhotoSection').classList.add('hidden');
+        checkConditionContinuity();
+        editingRecordId = null;
+        document.getElementById('editingRecordId').value='';
+        document.getElementById('inputFormTitle').innerText='📱 Input Petugas';
+        document.getElementById('saveDataBtn').innerText='📱 Simpan ke Perangkat';
+        document.getElementById('cancelEditBtn').style.display='none';
+        updateDesaOptions();
+        document.getElementById('tanggal').valueAsDate=new Date();
+    }
+
+    function filterAll() {
+        const searchVal = document.getElementById('searchInput').value.toLowerCase();
+        const kecVal = document.getElementById('filterKecamatan').value;
+        const tahunVal = document.getElementById('filterTahun').value;
+        const sortVal = document.getElementById('sortOption').value;
+
+        let activeData = dataStore.filter(d => {
+            const dateVal = d.tanggal || d.tahun || '';
+            const itemYear = dateVal.toString().substring(0, 4);
+            const matchSearch = (d.masjid || '').toLowerCase().includes(searchVal) || 
+                                (d.alamat || '').toLowerCase().includes(searchVal) || 
+                                (d.petugas || '').toLowerCase().includes(searchVal);
+            const matchKec = kecVal === 'ALL' || d.kecamatan === kecVal;
+            const matchTahun = tahunVal === 'ALL' || itemYear === String(tahunVal);
+            return matchSearch && matchKec && matchTahun;
+        });
+
+        activeData.sort((a, b) => {
+            const totalA = (parseInt(a.sapi) || 0) + (parseInt(a.kambing) || 0) + (parseInt(a.domba) || 0);
+            const totalB = (parseInt(b.sapi) || 0) + (parseInt(b.kambing) || 0) + (parseInt(b.domba) || 0);
+            const yearA = (a.tanggal || a.tahun || '').toString();
+            const yearB = (b.tanggal || b.tahun || '').toString();
+
+            switch (sortVal) {
+                case 'petugas_asc': return (a.petugas || '').localeCompare(b.petugas || '');
+                case 'petugas_desc': return (b.petugas || '').localeCompare(a.petugas || '');
+                case 'masjid_asc': return (a.masjid || '').localeCompare(b.masjid || '');
+                case 'kecamatan_asc': return (a.kecamatan || '').localeCompare(b.kecamatan || '');
+                case 'total_desc': return totalB - totalA;
+                case 'total_asc': return totalA - totalB;
+                case 'tahun_desc': return yearB.localeCompare(yearA);
+                default: return 0;
+            }
+        });
+
+        renderKPI(activeData);
+        renderInspectionSummary(activeData);
+        renderAntemortemWidget(activeData);
+        renderPostmortemWidget(activeData);
+        renderCharts(activeData);
+        renderGallery(activeData);
+        renderPublicTable(activeData);
+    }
+
+    async function refreshDashboard() {
+        const btn = document.getElementById('refreshDashboardBtn');
+        if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memuat...'; }
+        showLoading(true, 'Memperbarui data dashboard dari Google Spreadsheet...');
+        try {
+            await fetchCloudUsers();
+            await fetchCloudAnnouncements();
+            await fetchCloudData();
+            alert('Dashboard berhasil diperbarui dari data cloud.');
+        } catch (e) {
+            console.error(e);
+            alert('Refresh gagal. Periksa koneksi internet dan Google Apps Script.');
+        } finally {
+            showLoading(false);
+            if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-sync-alt"></i> 🔄 Refresh Data'; }
+        }
+    }
+
+    function renderKPI(activeData) {
+        let totalSapi = activeData.reduce((acc, curr) => acc + (parseInt(curr.sapi) || 0), 0);
+        let totalKambing = activeData.reduce((acc, curr) => acc + (parseInt(curr.kambing) || 0), 0);
+        let totalDomba = activeData.reduce((acc, curr) => acc + (parseInt(curr.domba) || 0), 0);
+
+        document.getElementById('cardTotalHewan').innerText = totalSapi + totalKambing + totalDomba;
+        document.getElementById('cardSapi').innerText = totalSapi;
+        document.getElementById('cardKambing').innerText = totalKambing;
+        document.getElementById('cardDomba').innerText = totalDomba;
+    }
+
+    function classifySpeciesStatus(activeData, statusField) {
+        const species = ['Sapi','Kambing','Domba'];
+        const result = {};
+        species.forEach(sp => result[sp] = {diperiksa:0, layak:0, ditunda:0, ditolak:0, terpotong:0, layakKonsumsi:0, tidakLayak:0});
+
+        activeData.forEach(d => {
+            species.forEach(sp => {
+                const count = parseInt(d[sp.toLowerCase()]) || 0;
+                if (!count) return;
+                if (statusField === 'ante') {
+                    result[sp].diperiksa += count;
+                    let rejected = 0, delayed = 0;
+                    (d.rincianGangguan || []).forEach(g => {
+                        if (g.jenis !== sp) return;
+                        const n = Math.max(0, parseInt(g.jumlah) || 0);
+                        const indikator = String(g.indikator || '').toLowerCase();
+                        if (indikator.includes('belum cukup umur') || indikator.includes('stres') || indikator.includes('tunda')) delayed += n;
+                        else if (indikator.includes('cacat') || indikator.includes('pmk') || indikator.includes('lsd') || indikator.includes('tidak layak') || indikator.includes('ditolak')) rejected += n;
+                    });
+                    if (!d.rincianGangguan || d.rincianGangguan.length === 0) {
+                        const status = String(d.antemortem || '1. Sehat / Normal').toLowerCase();
+                        if (status.includes('tunda') || status.includes('belum cukup umur') || status.includes('stres')) delayed = count;
+                        else if (status !== '1. sehat / normal' && !status.includes('sehat')) rejected = count;
+                    }
+                    rejected = Math.min(count, rejected);
+                    delayed = Math.min(count - rejected, delayed);
+                    result[sp].ditolak += rejected;
+                    result[sp].ditunda += delayed;
+                    result[sp].layak += Math.max(0, count - rejected - delayed);
+                } else {
+                    const status = String(d.postmortem || d.kesehatan || d.keteranganKesehatan || 'Sehat / Layak Konsumsi Total');
+                    const layakAnte = classifySpeciesStatus([d], 'ante')[sp].layak;
+                    const ditundaAnte = classifySpeciesStatus([d], 'ante')[sp].ditunda;
+                    const kandidatPotong = Math.max(0, layakAnte + ditundaAnte);
+                    const postLower = status.toLowerCase();
+                    if (postLower.includes('afkir total') || postLower.includes('tidak layak')) {
+                        result[sp].tidakLayak += kandidatPotong;
+                    } else if (postLower.includes('afkir sebagian')) {
+                        result[sp].tidakLayak += kandidatPotong;
+                    } else {
+                        result[sp].layakKonsumsi += kandidatPotong;
+                    }
+                    result[sp].terpotong += kandidatPotong;
+                }
+            });
+        });
+        return result;
+    }
+
+    function renderInspectionSummary(activeData) {
+        const box = document.getElementById('inspectionSummary');
+        if (!box) return;
+        const r = classifySpeciesStatus(activeData, 'ante');
+        const p = classifySpeciesStatus(activeData, 'post');
+        const species = ['Sapi','Kambing','Domba'];
+        box.innerHTML = species.map((sp, idx) => {
+            const x=r[sp], y=p[sp];
+            const postTotal=y.terpotong;
+            const konsumsi=y.layakKonsumsi;
+            const tidakLayak=y.tidakLayak;
+            return `<div class="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">\n                <div class="flex items-center justify-between mb-3"><h3 class="font-extrabold text-gray-800">${sp}</h3><span class="text-[10px] font-bold px-2 py-1 rounded-full bg-green-100 text-green-700">${x.diperiksa} diperiksa</span></div>\n                <div class="grid grid-cols-2 gap-2 text-center">\n                    <div class="bg-green-50 rounded-lg p-2"><div class="text-[10px] text-gray-500">Layak Potong</div><b class="text-green-700 text-lg">${x.layak}</b></div>\n                    <div class="bg-yellow-50 rounded-lg p-2"><div class="text-[10px] text-gray-500">Ditunda</div><b class="text-yellow-700 text-lg">${x.ditunda}</b></div>\n                    <div class="bg-red-50 rounded-lg p-2"><div class="text-[10px] text-gray-500">Ditolak</div><b class="text-red-700 text-lg">${x.ditolak}</b></div>\n                    <div class="bg-blue-50 rounded-lg p-2"><div class="text-[10px] text-gray-500">Terpotong</div><b class="text-blue-700 text-lg">${postTotal}</b></div>\n                </div>\n                <div class="mt-3 pt-3 border-t text-xs text-gray-600 flex justify-between"><span>Layak konsumsi: <b>${konsumsi}</b></span><span>Tidak layak: <b>${tidakLayak}</b></span></div>\n            </div>`;
+        }).join('');
+    }
+
+    function renderAntemortemWidget(activeData) {
+        const r = classifySpeciesStatus(activeData, 'ante');
+        if(pieAnteInstance) pieAnteInstance.destroy();
+        pieAnteInstance = new Chart(document.getElementById('pieAntemortem'), {
+            type:'bar',
+            data:{labels:['Sapi','Kambing','Domba'], datasets:[
+                {label:'Diperiksa',data:[r.Sapi.diperiksa,r.Kambing.diperiksa,r.Domba.diperiksa],backgroundColor:'#64748b'},
+                {label:'Layak Potong',data:[r.Sapi.layak,r.Kambing.layak,r.Domba.layak],backgroundColor:'#22c55e'},
+                {label:'Ditunda',data:[r.Sapi.ditunda,r.Kambing.ditunda,r.Domba.ditunda],backgroundColor:'#eab308'},
+                {label:'Ditolak / Tidak Layak',data:[r.Sapi.ditolak,r.Kambing.ditolak,r.Domba.ditolak],backgroundColor:'#ef4444'}
+            ]},
+            options:{responsive:true,maintainAspectRatio:false,scales:{x:{stacked:false},y:{beginAtZero:true}},plugins:{legend:{position:'bottom'}}}
+        });
+    }
+
+    function renderPostmortemWidget(activeData) {
+        const r = classifySpeciesStatus(activeData, 'post');
+        if(piePostInstance) piePostInstance.destroy();
+        piePostInstance = new Chart(document.getElementById('piePostmortem'), {
+            type:'bar',
+            data:{labels:['Sapi','Kambing','Domba'], datasets:[
+                {label:'Terpotong',data:[r.Sapi.terpotong,r.Kambing.terpotong,r.Domba.terpotong],backgroundColor:'#3b82f6'},
+                {label:'Layak Konsumsi',data:[r.Sapi.layakKonsumsi,r.Kambing.layakKonsumsi,r.Domba.layakKonsumsi],backgroundColor:'#14b8a6'},
+                {label:'Tidak Layak / Afkir',data:[r.Sapi.tidakLayak,r.Kambing.tidakLayak,r.Domba.tidakLayak],backgroundColor:'#f43f5e'}
+            ]},
+            options:{responsive:true,maintainAspectRatio:false,scales:{x:{stacked:false},y:{beginAtZero:true}},plugins:{legend:{position:'bottom'}}}
+        });
+    }
+
+    function renderCharts(activeData) {
+        const kecList = ["Sirimau", "Nusaniwe", "Teluk Ambon", "Baguala", "Leitimur Selatan"];
+        const sapiPerKec = kecList.map(k => activeData.filter(d => d.kecamatan === k).reduce((a,b) => a + (parseInt(b.sapi)||0), 0));
+        const kambingPerKec = kecList.map(k => activeData.filter(d => d.kecamatan === k).reduce((a,b) => a + (parseInt(b.kambing)||0), 0));
+        const dombaPerKec = kecList.map(k => activeData.filter(d => d.kecamatan === k).reduce((a,b) => a + (parseInt(b.domba)||0), 0));
+
+        if(barChartInstance) barChartInstance.destroy();
+        barChartInstance = new Chart(document.getElementById('barKecamatanChart'), {
+            type: 'bar',
+            data: {
+                labels: kecList,
+                datasets: [
+                    { label: 'Sapi', data: sapiPerKec, backgroundColor: '#10b981' },
+                    { label: 'Kambing', data: kambingPerKec, backgroundColor: '#f59e0b' },
+                    { label: 'Domba', data: dombaPerKec, backgroundColor: '#6366f1' }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+        });
+
+        let totalSapi = activeData.reduce((acc, curr) => acc + (parseInt(curr.sapi) || 0), 0);
+        let totalKambing = activeData.reduce((acc, curr) => acc + (parseInt(curr.kambing) || 0), 0);
+        let totalDomba = activeData.reduce((acc, curr) => acc + (parseInt(curr.domba) || 0), 0);
+
+        if(doughnutChartInstance) doughnutChartInstance.destroy();
+        doughnutChartInstance = new Chart(document.getElementById('doughnutChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Sapi', 'Kambing', 'Domba'],
+                datasets: [{ data: [totalSapi, totalKambing, totalDomba], backgroundColor: ['#10b981', '#f59e0b', '#6366f1'] }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+        });
+    }
+
+    async function generateCollageFromPhotoList(photos, headerTitle, headerSubtitle, outputFilename, teamNames = '') {
+        if (!photos || photos.length < 3) {
+            alert(`Foto kolase membutuhkan minimal 3 foto. Saat ini hanya ada ${photos ? photos.length : 0} foto.`);
+            return;
+        }
+
+        // Buka pilihan foto terlebih dahulu. Pengguna dapat memilih 3–12 foto.
+        window.openPhotoCollageSelector(
+            photos,
+            headerTitle,
+            headerSubtitle,
+            outputFilename,
+            teamNames || window._collageTeamNames || ''
+        );
+    }
+
+    async function downloadPhotoCollage(recordId) {
+        const allData = getWorkingData();
+        const record = allData.find(x => String(x.id) === String(recordId));
+        if (!record) {
+            alert('Data dokumentasi tidak ditemukan.');
+            return;
+        }
+
+        const locationName = String(record.masjid || '').trim();
+        const photos = [];
+
+        (Array.isArray(record.photos) ? record.photos : []).forEach(data => {
+            if (data && String(data).trim()) {
+                photos.push({ data, locationCaption: locationName || 'Nama Masjid/Tempat Tidak Diisi' });
+            }
+        });
+
+        (Array.isArray(record.additionalPhotos) ? record.additionalPhotos : []).forEach(p => {
+            if (p && p.data) {
+                photos.push({ data: p.data, locationCaption: locationName || 'Nama Masjid/Tempat Tidak Diisi' });
+            }
+        });
+
+        const safe = String(locationName || record.kecamatan || 'dokumentasi')
+            .replace(/[\\/:*?"<>|]+/g, '-').replace(/\s+/g, '_').slice(0, 50);
+        const date = String(record.tanggal || new Date().toISOString().slice(0, 10))
+            .replace(/[^\d-]/g, '-');
+
+        // NAMA PETUGAS pada JPG diambil LANGSUNG dari nama akun yang sedang login.
+        // Tidak mengambil judul aplikasi, nama file, atau nama SIP-KURBAN.
+        const teamNames = String(
+            currentUser && currentUser.nama ? currentUser.nama : ''
+        ).trim();
+
+        await generateCollageFromPhotoList(
+            photos,
+            'DOKUMENTASI KEGIATAN KURBAN',
+            [locationName, record.kecamatan, record.tanggal].filter(Boolean).join(' • '),
+            `Kolase_Dokumentasi_${safe}_${date}.jpg`,
+            teamNames
+        );
+    }
+
+    async function exportCollageFromFilter(sourceTab) {
+        let listData = [];
+        let label = 'Filter';
+
+        if (sourceTab === 'admin') {
+            listData = getAdminFilteredData();
+            label = 'Dashboard_Admin';
+        } else if (sourceTab === 'dinas') {
+            listData = getDinasFilteredData();
+            label = 'Dashboard_Dinas';
+        } else if (sourceTab === 'master') {
+            listData = getMasterFilteredData();
+            label = 'Master_Database';
+        }
+
+        const allPhotos = [];
+        listData.forEach(item => {
+            const locName = item.masjid || item.kecamatan || 'Lokasi';
+            (Array.isArray(item.photos) ? item.photos : []).forEach((p, idx) => {
+                if (p && p.trim()) {
+                    const tag = ['(Foto 1)', '(Foto 2)', '(Foto 3)'][idx] || 'Dokumentasi';
+                    allPhotos.push({ data: p, title: `${locName} (${tag})`, locationCaption: String(locName).trim() });
+                }
+            });
+            (Array.isArray(item.additionalPhotos) ? item.additionalPhotos : []).forEach(ap => {
+                if (ap && ap.data) {
+                    allPhotos.push({ data: ap.data, title: `${locName} (${ap.name || 'Temuan'})`, locationCaption: String(locName).trim() });
+                }
+            });
+        });
+
+        if (allPhotos.length < 3) {
+            alert(`Ekspor kolase membutuhkan minimal 3 foto. Foto yang ditemukan pada filter saat ini: ${allPhotos.length} foto.`);
+            return;
+        }
+
+        await generateCollageFromPhotoList(
+            allPhotos,
+            'KOLASE DOKUMENTASI TERFILTER',
+            `Nama Masjid/Tempat Pemotongan • ${listData.length} Lokasi`,
+            `Kolase_Dokumentasi_${label}_${Date.now()}.jpg`,
+            String(currentUser && currentUser.nama ? currentUser.nama : '').trim()
+        );
+    }
+
+    function renderGallery(activeData) {
+        const container = document.getElementById('photoGalleryContainer');
+        container.innerHTML = '';
+        if(activeData.length === 0) {
+            container.innerHTML = `<div class="col-span-full text-center py-6 text-gray-400">Tidak ada foto dokumentasi pada filter ini.</div>`;
+            return;
+        }
+
+        const photoTitles = ["(Foto 1)", "(Foto 2)", "(Foto 3)"];
+
+        activeData.forEach(item => {
+            const photos = item.photos || [];
+            let validPhotosHTML = '';
+            let validPhotoCount = 0;
+            
+            photos.forEach((p, idx) => {
+                if (p && p.trim() !== '') {
+                    validPhotoCount++;
+                    validPhotosHTML += `
+                        <div>
+                            <img src="${p}" class="w-full h-24 object-cover rounded border">
+                            <p class="text-[10px] text-center text-gray-500 mt-1">${photoTitles[idx] || 'Dokumentasi'}</p>
+                        </div>`;
+                }
+            });
+
+            (item.additionalPhotos || []).forEach(p => {
+                if (p && p.data) {
+                    validPhotoCount++;
+                    validPhotosHTML += `<div><img src="${p.data}" class="w-full h-24 object-cover rounded border"><p class="text-[10px] text-center text-orange-700 mt-1">${p.name || 'Temuan / Gangguan'}</p></div>`;
+                }
+            });
+
+            if (validPhotosHTML !== '') {
+                container.innerHTML += `
+                    <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 shadow-sm flex flex-col justify-between">
+                        <div class="mb-3 flex justify-between items-start">
+                            <div>
+                                <span class="bg-amber-100 text-amber-800 font-bold text-[11px] px-2 py-0.5 rounded flex items-center gap-1 w-max mb-1">
+                                    <i class="fas fa-user-check"></i> ${item.petugas || 'Petugas'}
+                                </span>
+                                <h3 class="font-bold text-gray-800 text-sm">${item.masjid}</h3>
+                                <p class="text-xs text-gray-500"><i class="fas fa-map-marker-alt text-red-500"></i> Kec. ${item.kecamatan} - Kel/Desa: ${item.desa || '-'}</p>
+                            </div>
+                            <span class="bg-green-100 text-green-800 font-bold text-[10px] px-2 py-0.5 rounded">${item.tanggal || item.tahun || '-'}</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            ${validPhotosHTML}
+                        </div>
+                    </div>`;
+            }
+        });
+
+        if (container.innerHTML.trim() === '') {
+            container.innerHTML = `<div class="col-span-full text-center py-6 text-gray-400">Tidak ada foto dokumentasi yang di-upload.</div>`;
+        }
+    }
+
+    function renderPublicTable(activeData) {
+        const tbody = document.getElementById('publicTableBody');
+        tbody.innerHTML = '';
+
+        if(activeData.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="10" class="text-center p-4 text-gray-400">Data pemotongan tidak ditemukan.</td></tr>`;
+            return;
+        }
+
+        const grouped = {};
+        activeData.forEach(item => {
+            const petugas = (item.petugas || 'Tidak Terdefinisi').trim();
+            if(!grouped[petugas]) {
+                grouped[petugas] = {
+                    petugas,
+                    kecamatan: new Set(),
+                    lokasi: new Set(),
+                    sapi: 0, kambing: 0, domba: 0,
+                    ante: {}, post: {}
+                };
+            }
+            const g = grouped[petugas];
+            if(item.kecamatan) g.kecamatan.add(item.kecamatan);
+            const lokasi = item.masjid || item.lokasi || '';
+            if(lokasi) g.lokasi.add(lokasi);
+            g.sapi += parseInt(item.sapi) || 0;
+            g.kambing += parseInt(item.kambing) || 0;
+            g.domba += parseInt(item.domba) || 0;
+
+            const ante = item.antemortem || 'Sehat / Normal';
+            const post = item.postmortem || 'Sehat / Layak Konsumsi Total';
+            g.ante[ante] = (g.ante[ante] || 0) + 1;
+            g.post[post] = (g.post[post] || 0) + 1;
+        });
+
+        const rows = Object.values(grouped).sort((a,b) => a.petugas.localeCompare(b.petugas));
+        rows.forEach((g, index) => {
+            const total = g.sapi + g.kambing + g.domba;
+            const formatStatus = obj => Object.entries(obj)
+                .map(([name,count]) => `${name}${count > 1 ? ` (${count} lokasi)` : ''}`)
+                .join('<br>') || '-';
+
+            tbody.innerHTML += `
+                <tr class="hover:bg-gray-50 text-xs md:text-sm">
+                    <td class="p-3 text-center font-bold">${index + 1}</td>
+                    <td class="p-3 font-bold text-gray-800">${g.petugas}</td>
+                    <td class="p-3">${[...g.kecamatan].join(', ') || '-'}</td>
+                    <td class="p-3 text-center font-semibold">${g.lokasi.size}</td>
+                    <td class="p-3 text-center">${g.sapi}</td>
+                    <td class="p-3 text-center">${g.kambing}</td>
+                    <td class="p-3 text-center">${g.domba}</td>
+                    <td class="p-3 text-center font-extrabold bg-green-50 text-green-800">${total}</td>
+                    <td class="p-3 text-xs">${formatStatus(g.post)}</td>
+                    <td class="p-3 text-xs">${formatStatus(g.ante)}</td>
+                </tr>`;
+        });
+    }
+
+    function renderPublicAdminAnnouncements() {
+        const container = document.getElementById('publicAdminAnnouncementsContainer');
+        const grid = document.getElementById('publicAdminAnnouncementsGrid');
+        if(!grid) return;
+        grid.innerHTML = '';
+        if(adminAnnouncements.length === 0) {
+            container.classList.add('hidden');
+            return;
+        }
+        container.classList.remove('hidden');
+        adminAnnouncements.forEach(a => {
+            grid.innerHTML += `
+                <div class="border-l-4 border-green-600 bg-green-50/50 rounded-r-xl p-4 shadow-sm border border-gray-100 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-sm text-green-900">${a.title}</h3>
+                            <span class="text-[10px] bg-green-200 text-green-800 px-2 py-0.5 rounded-full font-bold whitespace-nowrap">📅 ${a.date}</span>
+                        </div>
+                        <p class="text-xs text-gray-700 leading-relaxed whitespace-pre-line">${a.content}</p>
+                    </div>
+                </div>`;
+        });
+    }
+
+    function renderPetugasDashboard() {
+        if (!currentUser || currentUser.role !== 'Tim') return;
+        const mine = getWorkingData().filter(d => (d.petugas || '').trim() === (currentUser.nama || '').trim());
+        const sapi = mine.reduce((a,b)=>a+(parseInt(b.sapi)||0),0);
+        const kambing = mine.reduce((a,b)=>a+(parseInt(b.kambing)||0),0);
+        const domba = mine.reduce((a,b)=>a+(parseInt(b.domba)||0),0);
+        const set=(id,v)=>{const e=document.getElementById(id);if(e)e.innerText=v;};
+        set('petugasDashData',mine.length); set('petugasDashSapi',sapi); set('petugasDashKambing',kambing); set('petugasDashDomba',domba);
+        const tbody=document.getElementById('petugasDashboardTableBody'); 
+        if(tbody){
+            tbody.innerHTML='';
+            if(!mine.length) tbody.innerHTML='<tr><td colspan="9" class="text-center p-5 text-gray-400">Belum ada data pemotongan.</td></tr>';
+            else mine.forEach((r,i)=>{
+                const pending=isLocalRecord(r.id);
+                tbody.innerHTML+=`<tr>
+                    <td class="text-center">${i+1}</td><td>${r.tanggal||r.tahun||'-'}</td>
+                    <td>${r.kecamatan||'-'}<br><span class="text-xs text-gray-500">${r.desa||''}</span></td>
+                    <td><b>${r.masjid||'-'}</b><br><span class="text-xs text-gray-500">${r.alamat||''}</span></td>
+                    <td class="text-center">${r.sapi||0}</td><td class="text-center">${r.kambing||0}</td><td class="text-center">${r.domba||0}</td>
+                    <td class="text-xs">${r.postmortem||'-'}${pending ? '<br><span class="text-amber-600 font-bold">⏳ Belum dikirim</span>' : ''}</td>
+                    <td class="text-center"><button class="btn-warning text-xs px-2 py-1" onclick="openEditModal(${JSON.stringify(r.id)})">✏️ Edit</button> <button class="btn-danger text-xs px-2 py-1" onclick="deleteData(${JSON.stringify(r.id)})">🗑️ Hapus</button></td></tr>`;
+            });
+        }
+        renderPetugasDashboardVisuals(mine);
+    }
+
+    function renderPetugasDashboardVisuals(mine){
+        const anteCounts={}, postCounts={};
+        mine.forEach(r=>{
+            const a=String(r.antemortem||'Sehat / Normal'); anteCounts[a]=(anteCounts[a]||0)+1;
+            const p=String(r.postmortem||'Sehat / Layak Konsumsi Total'); postCounts[p]=(postCounts[p]||0)+1;
+        });
+        const destroy=(name)=>{if(window[name]){window[name].destroy();window[name]=null;}};
+        destroy('petugasPieAnteInstance'); destroy('petugasPiePostInstance'); destroy('petugasAnimalInstance');
+
+        const c1=document.getElementById('petugasPieAntemortem');
+        if(c1) window.petugasPieAnteInstance=new Chart(c1,{type:'doughnut',data:{labels:Object.keys(anteCounts).length?Object.keys(anteCounts):['Belum ada data'],datasets:[{data:Object.keys(anteCounts).length?Object.values(anteCounts):[1]}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}});
+        const c2=document.getElementById('petugasPiePostmortem');
+        if(c2) window.petugasPiePostInstance=new Chart(c2,{type:'doughnut',data:{labels:Object.keys(postCounts).length?Object.keys(postCounts):['Belum ada data'],datasets:[{data:Object.keys(postCounts).length?Object.values(postCounts):[1]}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}});
+
+        const r=classifySpeciesStatus(mine,'ante'), p=classifySpeciesStatus(mine,'post');
+        const box=document.getElementById('petugasInspectionSummary');
+        if(box){
+            box.innerHTML=['Sapi','Kambing','Domba'].map(sp=>{
+                const x=r[sp], y=p[sp];
+                return `<div class="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
+                    <div class="flex items-center justify-between mb-2"><b>${sp}</b><span class="text-[10px] bg-green-100 text-green-700 px-2 py-1 rounded-full">${x.diperiksa} diperiksa</span></div>
+                    <div class="grid grid-cols-2 gap-2 text-center text-xs">
+                        <div class="bg-green-50 rounded p-2">Layak Potong<br><b class="text-green-700 text-lg">${x.layak}</b></div>
+                        <div class="bg-yellow-50 rounded p-2">Ditunda<br><b class="text-yellow-700 text-lg">${x.ditunda}</b></div>
+                        <div class="bg-red-50 rounded p-2">Ditolak<br><b class="text-red-700 text-lg">${x.ditolak}</b></div>
+                        <div class="bg-blue-50 rounded p-2">Terpotong<br><b class="text-blue-700 text-lg">${y.terpotong}</b></div>
+                    </div>
+                    <div class="mt-2 pt-2 border-t text-xs">Layak konsumsi: <b>${y.layakKonsumsi}</b> | Tidak layak: <b>${y.tidakLayak}</b></div>
+                </div>`;
+            }).join('');
+        }
+
+        const animal=document.getElementById('petugasAnimalChart');
+        if(animal) window.petugasAnimalInstance=new Chart(animal,{type:'doughnut',data:{labels:['Sapi','Kambing','Domba'],datasets:[{data:[mine.reduce((a,b)=>a+(+b.sapi||0),0),mine.reduce((a,b)=>a+(+b.kambing||0),0),mine.reduce((a,b)=>a+(+b.domba||0),0)]}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}});
+
+        const gallery=document.getElementById('petugasPhotoGallery');
+        if(gallery){
+            const cards=[];
+            mine.forEach(r=>{
+                (r.photos||[]).forEach((src,idx)=>{if(src) cards.push(`<div><img src="${src}" class="w-full h-24 object-cover rounded-lg border"><p class="text-[10px] text-center text-gray-500 mt-1">${r.masjid||''} • ${['(Foto 1)','(Foto 2)','(Foto 3)'][idx]||'Dokumentasi'}</p></div>`);});
+                (r.additionalPhotos||[]).forEach(ph=>{if(ph&&ph.data) cards.push(`<div><img src="${ph.data}" class="w-full h-24 object-cover rounded-lg border"><p class="text-[10px] text-center text-orange-700 mt-1">${r.masjid||''} • ${ph.name||'Temuan'}</p></div>`);});
+            });
+            if(cards.length){
+                mine.forEach(r=>{
+                    const photoCount=(Array.isArray(r.photos)?r.photos.filter(Boolean).length:0)+(Array.isArray(r.additionalPhotos)?r.additionalPhotos.filter(x=>x&&x.data).length:0);
+                    if(photoCount>=3){
+                        cards.push(`<div class="col-span-2 mt-1"><button type="button" class="collage-download-btn" onclick="downloadPhotoCollage(${JSON.stringify(r.id)})"><i class="fas fa-images"></i> DOWNLOAD FOTO KOLASE (${Math.min(photoCount,9)} FOTO)</button></div>`);
+                    }
+                });
+            }
+            gallery.innerHTML=cards.length?cards.join(''):'<div class="col-span-2 text-center py-8 text-gray-400">Belum ada dokumentasi foto.</div>';
+        }
+    }
+
+    function renderData() {
+        const container = document.getElementById('petugasTablesContainer');
+        if(!container) return;
+
+        const searchVal = (document.getElementById('searchInputDb')?.value || '').trim().toLowerCase();
+        const tahunVal = document.getElementById('filterTahunDatabase')?.value || 'ALL';
+
+        let activeData = getWorkingData().filter(d => {
+            const dateVal = d.tanggal || d.tahun || '';
+            const itemYear = String(dateVal).substring(0,4);
+            const matchSearch = [d.masjid,d.alamat,d.kecamatan,d.desa,d.petugas]
+                .some(v => String(v||'').toLowerCase().includes(searchVal));
+            const matchTahun = tahunVal === 'ALL' || itemYear === String(tahunVal);
+            const matchRole = !currentUser || currentUser.role !== 'Tim' ||
+                String(d.petugas||'').trim() === String(currentUser.nama||'').trim();
+            return matchSearch && matchTahun && matchRole;
+        });
+
+        const kecOrder = ["Sirimau","Nusaniwe","Teluk Ambon","Baguala","Leitimur Selatan"];
+        const orderMap = Object.fromEntries(kecOrder.map((k,i)=>[k,i]));
+
+        activeData.sort((a,b) => {
+            const ka=orderMap[a.kecamatan] ?? 99, kb=orderMap[b.kecamatan] ?? 99;
+            return ka-kb ||
+                String(a.kecamatan||'').localeCompare(String(b.kecamatan||'')) ||
+                String(a.desa||'').localeCompare(String(b.desa||'')) ||
+                String(a.masjid||'').localeCompare(String(b.masjid||'')) ||
+                String(a.tanggal||'').localeCompare(String(b.tanggal||''));
+        });
+
+        if(!activeData.length){
+            container.innerHTML = `
+                <div class="kecamatan-group">
+                    <div class="kecamatan-empty">
+                        <div style="font-size:2rem;margin-bottom:6px">🗃️</div>
+                        Data pemotongan tidak ditemukan sesuai filter.
+                    </div>
+                </div>`;
+            return;
+        }
+
+        const groups = {};
+        activeData.forEach(r => {
+            const k = r.kecamatan || 'Kecamatan Belum Diisi';
+            (groups[k] ||= []).push(r);
+        });
+
+        const orderedGroups = Object.entries(groups).sort((a,b)=>{
+            const oa=orderMap[a[0]] ?? 99, ob=orderMap[b[0]] ?? 99;
+            return oa-ob || a[0].localeCompare(b[0]);
+        });
+
+        const total = arr => arr.reduce((n,r)=>n+(+r.sapi||0)+(+r.kambing||0)+(+r.domba||0),0);
+        const speciesTotal = (arr,key) => arr.reduce((n,r)=>n+(+r[key]||0),0);
+
+        container.innerHTML = orderedGroups.map(([kec, rows]) => {
+            const sapi=speciesTotal(rows,'sapi'), kambing=speciesTotal(rows,'kambing'), domba=speciesTotal(rows,'domba');
+            const pendingCount=rows.filter(r=>isLocalRecord(r.id)).length;
+
+            return `
+            <section class="kecamatan-group">
+                <div class="kecamatan-group-header">
+                    <div class="kecamatan-title">
+                        <span style="font-size:1.2rem">📍</span>
+                        <span>Kecamatan ${kec}</span>
+                        <span class="kecamatan-badge">${rows.length} data</span>
+                    </div>
+                    <div class="kecamatan-meta">
+                        <span class="kecamatan-stat">🐄 Sapi: ${sapi}</span>
+                        <span class="kecamatan-stat">🐐 Kambing: ${kambing}</span>
+                        <span class="kecamatan-stat">🐑 Domba: ${domba}</span>
+                        <span class="kecamatan-stat">📊 Total: ${total(rows)}</span>
+                        ${pendingCount ? `<span class="kecamatan-stat" style="color:#b45309;background:#fffbeb">⏳ Lokal: ${pendingCount}</span>` : ''}
+                    </div>
+                </div>
+                <div class="kecamatan-table-wrap">
+                    <table class="legacy-table">
+                        <thead><tr>
+                            <th>No</th><th>Desa/Kelurahan</th><th>Masjid / Tempat</th><th>Alamat</th>
+                            <th>Sapi</th><th>Kambing</th><th>Domba</th><th>Pemeriksaan</th><th>Foto</th><th>Aksi</th>
+                        </tr></thead>
+                        <tbody>
+                        ${rows.map((r,i)=>{
+                            const pending=isLocalRecord(r.id);
+                            const pemeriksaan = `<b>Ante:</b> ${r.antemortem||'-'}<br><b>Post:</b> ${r.postmortem||'-'}`;
+                            const photoCount=(Array.isArray(r.photos)?r.photos.filter(Boolean).length:0)
+                                +(Array.isArray(r.additionalPhotos)?r.additionalPhotos.filter(x=>x&&x.data).length:0);
+                            return `<tr>
+                                <td class="text-center">${i+1}</td>
+                                <td><b>${r.desa||'-'}</b></td>
+                                <td><b>${r.masjid||'-'}</b></td>
+                                <td>${r.alamat||'-'}</td>
+                                <td class="text-center">${r.sapi||0}</td>
+                                <td class="text-center">${r.kambing||0}</td>
+                                <td class="text-center">${r.domba||0}</td>
+                                <td class="text-xs">${pemeriksaan}${pending?'<br><span class="text-amber-600 font-bold">⏳ Belum dikirim</span>':''}</td>
+                                <td class="text-center">${photoCount ? '📷 '+photoCount : '-'}</td>
+                                <td class="text-center">
+                                    <div class="flex flex-col gap-1">
+                                        <button class="btn-warning text-xs px-2 py-1" onclick="openEditModal(${JSON.stringify(r.id)})">✏️ Edit</button>
+                                        <button class="btn-export text-xs px-2 py-1" style="${pending?'background:#0284c7;':'background:#94a3b8;cursor:not-allowed;'}" onclick="sendOneRecordToServer(${JSON.stringify(r.id)})" ${pending?'':'disabled'}>☁️ Kirim</button>
+                                        <button class="btn-export btn-word text-xs px-2 py-1" onclick="exportWordDokumentasi(${JSON.stringify(r.id)})">📄 Word</button>
+                                        <button class="btn-danger text-xs px-2 py-1" onclick="deleteData(${JSON.stringify(r.id)})">🗑️ Hapus</button>
+                                    </div>
+                                </td>
+                            </tr>`;
+                        }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </section>`;
+        }).join('');
+    }
+
+    async function postToServer(payload, options = {}) {
+        await fetch(SCRIPT_URL, {
+            method:'POST',
+            mode:'no-cors',
+            headers:{'Content-Type':'text/plain;charset=utf-8'},
+            body:JSON.stringify(payload)
+        });
+        if (options.refresh !== false) {
+            await new Promise(r=>setTimeout(r,1500));
+            await fetchCloudData();
+        }
+        return true;
+    }
+
+    async function sendLocalRecordToServer(item) {
+        return postToServer({...item, action:'saveData', type:'data', syncStatus:'cloud'});
+    }
+
+    async function sendOneRecordToServer(id) {
+        const item=localDataStore.find(x=>String(x.id)===String(id));
+        if(!item){ alert('Data lokal tidak ditemukan.'); return; }
+        if(!confirm(`Kirim data ${item.masjid||''} ke Google Spreadsheet?`)) return;
+        showLoading(true,'Mengirim data ke Google Spreadsheet...');
+        try{
+            await sendLocalRecordToServer(item);
+            const exists=(Array.isArray(cloudDataStore)?cloudDataStore:[]).some(x=>String(x.id)===String(item.id));
+            if(!exists) throw new Error('Data belum terdeteksi di cloud setelah pengiriman.');
+            localDataStore=localDataStore.filter(x=>String(x.id)!==String(item.id));
+            localStorage.setItem('SIP_QURBAN_LOCAL_DATA',JSON.stringify(localDataStore));
+            mergeStores();
+            alert('Data berhasil dikirim ke server/cloud.');
+        }catch(e){
+            console.error(e);
+            alert('Data belum berhasil diverifikasi di server. Data tetap disimpan di perangkat.');
+        }finally{showLoading(false);}
+    }
+
+    async function urlToBlob(url) {
+        try {
+            const response = await fetch(url);
+            const blob = await response.blob();
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsArrayBuffer(blob);
+            });
+        } catch (e) {
+            return null;
+        }
+    }
+
+    async function exportWordDokumentasi(id) {
+        const item = getWorkingData().find(d => String(d.id) === String(id));
+        if(!item) return;
+        showLoading(true, "Membuat Dokumen Word Dokumentasi...");
+        try {
+            await generateAndSaveWordDoc([item]);
+        } catch(e) {
+            console.error(e);
+            alert('Gagal membuat dokumen Word.');
+        } finally {
+            showLoading(false);
+        }
+    }
+
+    async function generateAndSaveWordDoc(items, customPetugasName = null) {
+        const { Document, Packer, Paragraph, TextRun, ImageRun, AlignmentType, Table, TableRow, TableCell, WidthType, BorderStyle } = window.docx;
+
+        let childrenElements = [];
+        const firstDateVal = items[0].tanggal || items[0].tahun || new Date().toISOString();
+        const tahun = String(firstDateVal).substring(0, 4);
+        const detectedPetugasNames = [...new Set(items.map(x => String(x.petugas || '').trim()).filter(Boolean))];
+        const petugasName = customPetugasName || (
+            detectedPetugasNames.length === 1
+                ? detectedPetugasNames[0]
+                : (currentUser && currentUser.nama ? String(currentUser.nama).trim() : 'Seluruh Petugas')
+        );
+
+        childrenElements.push(
+            new Paragraph({
+                alignment: AlignmentType.CENTER,
+                children: [
+                    new TextRun({
+                        text: `DOKUMENTASI PENGAWASAN PEMOTONGAN HEWAN KURBAN KOTA AMBON TAHUN ${tahun}`,
+                        bold: true,
+                        size: 32,
+                        color: "000000"
+                    })
+                ],
+                spacing: { after: 100 }
+            }),
+            new Paragraph({
+                alignment: AlignmentType.CENTER,
+                children: [
+                    new TextRun({
+                        text: `Nama Petugas: ${petugasName}`,
+                        size: 22,
+                        color: "000000"
+                    })
+                ],
+                spacing: { after: 80 }
+            }),
+            new Paragraph({
+                alignment: AlignmentType.CENTER,
+                children: [
+                    new TextRun({
+                        text: `Tahun: ${tahun}`,
+                        size: 22,
+                        color: "000000"
+                    })
+                ],
+                spacing: { after: 300 }
+            }),
+            new Paragraph({
+                border: { bottom: { color: "000000", space: 1, style: BorderStyle.SINGLE, size: 6 } },
+                spacing: { after: 200 }
+            })
+        );
+
+        for(let idx = 0; idx < items.length; idx++) {
+            const item = items[idx];
+
+            childrenElements.push(
+                new Paragraph({
+                    children: [
+                        new TextRun({ text: "Nama Masjid / Lokasi Pemotongan: ", bold: true, size: 20, color: "000000" }),
+                        new TextRun({ text: `${item.masjid || '-'}`, size: 20, color: "000000" })
+                    ],
+                    spacing: { after: 120 }
+                }),
+                new Paragraph({
+                    children: [
+                        new TextRun({ text: "Alamat: ", bold: true, size: 20, color: "000000" }),
+                        new TextRun({ text: `Kec. ${item.kecamatan || '-'}, Desa ${item.desa || '-'} - ${item.alamat || '-'}`, size: 20, color: "000000" })
+                    ],
+                    spacing: { after: 120 }
+                }),
+                new Paragraph({
+                    children: [
+                        new TextRun({ text: "Tanggal Pemeriksaan: ", bold: true, size: 20, color: "000000" }),
+                        new TextRun({ text: `${item.tanggal || '-'}`, size: 20, color: "000000" })
+                    ],
+                    spacing: { after: 120 }
+                }),
+                new Paragraph({
+                    children: [
+                        new TextRun({ text: "Hasil Pemeriksaan: ", bold: true, size: 20, color: "000000" }),
+                        new TextRun({ text: `Jumlah Ternak (Sapi: ${item.sapi || 0}, Kambing: ${item.kambing || 0}, Domba: ${item.domba || 0}). Status Antemortem: ${item.antemortem || '-'}. Status Postmortem: ${item.postmortem || '-'}. Tindakan: ${item.tindakan || '-'}.`, size: 20, color: "000000" })
+                    ],
+                    spacing: { after: 200 }
+                })
+            );
+
+            const photos = item.photos || [];
+            const photoLabels = ["(Foto 1)", "(Foto 2)", "(Foto 3)"];
+
+            let photoRows = [];
+            let currentCells = [];
+
+            for (let p = 0; p < photos.length; p++) {
+                if (photos[p]) {
+                    const imgBuffer = await urlToBlob(photos[p]);
+                    if (imgBuffer) {
+                        try {
+                            const imageRun = new ImageRun({
+                                data: imgBuffer,
+                                transformation: { width: 220, height: 160 }
+                            });
+                            
+                            const cell = new TableCell({
+                                children: [
+                                    new Paragraph({
+                                        alignment: AlignmentType.CENTER,
+                                        children: [imageRun],
+                                        spacing: { after: 40 }
+                                    }),
+                                    new Paragraph({
+                                        alignment: AlignmentType.CENTER,
+                                        children: [new TextRun({ text: photoLabels[p], size: 18, bold: true })]
+                                    })
+                                ],
+                                width: { size: 50, type: WidthType.PERCENTAGE }
+                            });
+                            currentCells.push(cell);
+
+                            if (currentCells.length === 2) {
+                                photoRows.push(new TableRow({ children: currentCells }));
+                                currentCells = [];
+                            }
+                        } catch(err) {
+                            console.error("Error adding image to docx", err);
+                        }
+                    }
+                }
+            }
+
+            const extraPhotos = Array.isArray(item.additionalPhotos) ? item.additionalPhotos : [];
+            for (const ep of extraPhotos) {
+                if (!ep || !ep.data) continue;
+                const imgBuffer = await urlToBlob(ep.data);
+                if (!imgBuffer) continue;
+                try {
+                    const imageRun = new ImageRun({data: imgBuffer, transformation:{width:220,height:160}});
+                    currentCells.push(new TableCell({
+                        children:[
+                            new Paragraph({alignment:AlignmentType.CENTER, children:[imageRun], spacing:{after:40}}),
+                            new Paragraph({alignment:AlignmentType.CENTER, children:[new TextRun({text:ep.name||'Temuan / Gangguan',size:18,bold:true})]})
+                        ],
+                        width:{size:50,type:WidthType.PERCENTAGE}
+                    }));
+                    if(currentCells.length===2){photoRows.push(new TableRow({children:currentCells}));currentCells=[];}
+                } catch(err){ console.error('Error adding additional image to docx',err); }
+            }
+
+            if (currentCells.length > 0) {
+                if (currentCells.length === 1) {
+                    currentCells.push(new TableCell({ children: [new Paragraph({ text: "" })], width: { size: 50, type: WidthType.PERCENTAGE } }));
+                }
+                photoRows.push(new TableRow({ children: currentCells }));
+            }
+
+            if (photoRows.length > 0) {
+                childrenElements.push(
+                    new Paragraph({
+                        children: [new TextRun({ text: "Dokumentasi Foto Lapangan:", bold: true, size: 22, color: "000000" })],
+                        spacing: { before: 100, after: 100 }
+                    }),
+                    new Table({
+                        width: { size: 100, type: WidthType.PERCENTAGE },
+                        rows: photoRows
+                    })
+                );
+            }
+
+            if (idx < items.length - 1) {
+                childrenElements.push(
+                    new Paragraph({
+                        border: { bottom: { color: "000000", space: 1, style: BorderStyle.SINGLE, size: 4 } },
+                        spacing: { before: 200, after: 200 }
+                    })
+                );
+            }
+        }
+
+        const doc = new Document({
+            sections: [{ properties: {}, children: childrenElements }]
+        });
+
+        const blob = await Packer.toBlob(doc);
+        const filename = customPetugasName ? `Dokumentasi_Kurban_${customPetugasName.replace(/\s+/g, '_')}.docx` : `Dokumentasi_Kurban_${items[0].masjid.replace(/\s+/g, '_')}.docx`;
+        saveAs(blob, filename);
+    }
+
+    async function cloudMutation(payload, successMessage) {
+        await postToServer(payload);
+        if (successMessage) alert(successMessage);
+    }
+
+    async function deleteData(id) {
+        if (!currentUser || !['Admin','Dinas','Tim'].includes(currentUser.role)) {
+            alert('Anda tidak memiliki izin menghapus data.');
+            return;
+        }
+
+        const normalizedId = String(id);
+
+        let storedLocal = [];
+        try {
+            storedLocal = JSON.parse(localStorage.getItem('SIP_QURBAN_LOCAL_DATA') || '[]');
+            if (!Array.isArray(storedLocal)) storedLocal = [];
+        } catch (e) {
+            storedLocal = [];
+        }
+
+        const localItem = storedLocal.find(d => String(d.id) === normalizedId)
+                       || (Array.isArray(localDataStore) ? localDataStore.find(d => String(d.id) === normalizedId) : null);
+
+        if (localItem) {
+            if (!confirm(`Hapus data ${localItem.masjid || ''} dari STORAGE PERANGKAT?\n\nData akan dihapus permanen dari penyimpanan perangkat ini.`)) return;
+
+            localDataStore = (Array.isArray(localDataStore) ? localDataStore : [])
+                .filter(d => String(d.id) !== normalizedId);
+            storedLocal = storedLocal.filter(d => String(d.id) !== normalizedId);
+
+            if (storedLocal.length > 0) {
+                localStorage.setItem('SIP_QURBAN_LOCAL_DATA', JSON.stringify(storedLocal));
+            } else {
+                localStorage.removeItem('SIP_QURBAN_LOCAL_DATA');
+            }
+
+            cloudDataStore = (Array.isArray(cloudDataStore) ? cloudDataStore : [])
+                .filter(d => String(d.id) !== normalizedId);
+            dataStore = (Array.isArray(dataStore) ? dataStore : [])
+                .filter(d => String(d.id) !== normalizedId);
+
+            renderData();
+            renderPetugasDashboard();
+            renderAdminDashboard();
+            renderDinasDashboard();
+            populateYearFilter();
+
+            alert('✅ Data berhasil dihapus dari STORAGE PERANGKAT.');
+            return;
+        }
+
+        const item = (Array.isArray(cloudDataStore) ? cloudDataStore : []).find(d => String(d.id) === normalizedId)
+                  || (Array.isArray(dataStore) ? dataStore : []).find(d => String(d.id) === normalizedId);
+
+        if (!item) {
+            alert('Data tidak ditemukan di storage perangkat maupun data cloud.');
+            return;
+        }
+
+        if (!confirm(`Hapus data ${item.masjid || ''} dari database cloud?\n\nData akan dihapus dari Master Database dan seluruh Dashboard.`)) return;
+
+        showLoading(true, 'Menghapus data...');
+
+        try {
+            cloudDataStore = cloudDataStore.filter(d => String(d.id) !== normalizedId);
+            dataStore = dataStore.filter(d => String(d.id) !== normalizedId);
+            localDataStore = localDataStore.filter(d => String(d.id) !== normalizedId);
+            localStorage.setItem('SIP_QURBAN_LOCAL_DATA', JSON.stringify(localDataStore));
+            renderData();
+            renderPetugasDashboard();
+            renderAdminDashboard();
+            renderDinasDashboard();
+
+            // Kirim penghapusan ke server, lalu WAJIB sinkronisasi ulang dan verifikasi.
+            // Sebelumnya refresh:false membuat UI seolah-olah terhapus, tetapi saat login ulang
+            // data cloud dimuat kembali karena penghapusan belum diverifikasi.
+            const deletePayload = {
+                action: 'deleteData',
+                type: 'deleteData',
+                id: item.id,
+                recordId: item.id,
+                rowId: item.id
+            };
+
+            // Kirim beberapa kali secara berurutan agar Apps Script yang sedang sibuk
+            // tetap mendapat perintah, kemudian ambil ulang data cloud.
+            await postToServer(deletePayload, {refresh:false});
+            await new Promise(r => setTimeout(r, 1200));
+            await fetchCloudData();
+
+            const stillExists = (Array.isArray(cloudDataStore) ? cloudDataStore : [])
+                .some(d => String(d.id) === normalizedId);
+
+            if (stillExists) {
+                // Coba sekali lagi jika baris masih terdeteksi.
+                await postToServer(deletePayload, {refresh:false});
+                await new Promise(r => setTimeout(r, 1800));
+                await fetchCloudData();
+            }
+
+            const verifiedGone = !(Array.isArray(cloudDataStore) ? cloudDataStore : [])
+                .some(d => String(d.id) === normalizedId);
+
+            if (!verifiedGone) {
+                throw new Error('Data masih ada di cloud setelah perintah hapus.');
+            }
+
+            // Pastikan seluruh tampilan membaca data cloud terbaru.
+            dataStore = Array.isArray(cloudDataStore) ? [...cloudDataStore] : [];
+            localDataStore = (Array.isArray(localDataStore) ? localDataStore : [])
+                .filter(d => String(d.id) !== normalizedId);
+            localStorage.setItem('SIP_QURBAN_LOCAL_DATA', JSON.stringify(localDataStore));
+            mergeStores();
+
+            alert('✅ Data berhasil dihapus dari database cloud dan sudah diverifikasi. Data tidak akan muncul lagi setelah login ulang.');
+        } catch (e) {
+            console.error('DELETE CLOUD DATA ERROR:', e);
+            await fetchCloudData();
+            alert('❌ Penghapusan cloud gagal.');
+        } finally {
+            showLoading(false);
+        }
+    }
+
+    function openEditModal(id) {
+        const item = getWorkingData().find(d => String(d.id) === String(id));
+        if(!item) return;
+        editingRecordId = item.id;
+        document.getElementById('editingRecordId').value = item.id;
+        document.getElementById('tanggal').value = item.tanggal || '';
+        document.getElementById('kecamatan').value = item.kecamatan || 'Sirimau';
+        updateDesaOptions();
+        document.getElementById('desaKelurahan').value = item.desa || '';
+        document.getElementById('namaMasjid').value = item.masjid || '';
+        document.getElementById('lokasi').value = item.alamat || '';
+        document.getElementById('sapi').value = item.sapi || 0;
+        document.getElementById('kambing').value = item.kambing || 0;
+        document.getElementById('domba').value = item.domba || 0;
+        document.getElementById('antemortemStatus').value = item.antemortem || '1. Sehat / Normal';
+        document.getElementById('postmortemStatus').value = item.postmortem || 'Sehat / Layak Konsumsi Total';
+        document.getElementById('tindakan').value = item.tindakan || '';
+        currentUploadedPhotos = Array.isArray(item.photos) ? [...item.photos.slice(0,3)] : [null,null,null];
+        while(currentUploadedPhotos.length < 3) currentUploadedPhotos.push(null);
+        currentUploadedAdditionalPhotos = Array.isArray(item.additionalPhotos) ? [...item.additionalPhotos] : [];
+        for(let i=0;i<3;i++){ const el=document.getElementById(`prev${i+1}`); if(el){el.src=currentUploadedPhotos[i]||'';el.style.display=currentUploadedPhotos[i]?'block':'none';} }
+        document.getElementById('inputFormTitle').innerText = '✏️ Edit Input Petugas';
+        document.getElementById('saveDataBtn').innerText = '💾 Simpan Perubahan ke Perangkat';
+        document.getElementById('cancelEditBtn').style.display = 'block';
+        document.getElementById('editModal').style.display = 'none';
+        checkConditionContinuity();
+        switchTab('input-tab');
+        window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    function cancelEditMode() {
+        resetInputForm();
+        switchTab(currentUser && currentUser.role==='Tim' ? 'dashboard-petugas-tab' : 'database-tab');
+    }
+
+    function startNewEntry() { cancelEditMode(); switchTab('input-tab'); }
+
+    async function saveEditData() {
+        await submitData();
+    }
+
+    async function saveAdminAnnouncement() {
+        const title = document.getElementById('adminAnnouncementTitle').value.trim();
+        const content = document.getElementById('adminAnnouncementContent').value.trim();
+        if(!title || !content) {
+            alert('Judul dan isi pengumuman wajib diisi.');
+            return;
+        }
+        const newAnn = {
+            type: "announcement",
+            id: Date.now(),
+            title: title,
+            content: content,
+            date: new Date().toLocaleDateString('id-ID')
+        };
+
+        showLoading(true, "Mempublikasikan pengumuman...");
+        try {
+            await fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newAnn)
+            });
+            adminAnnouncements.unshift(newAnn);
+            localStorage.setItem('SIP_QURBAN_ADMIN_ANNOUNCEMENTS', JSON.stringify(adminAnnouncements));
+            document.getElementById('adminAnnouncementTitle').value = '';
+            document.getElementById('adminAnnouncementContent').value = '';
+            alert('Pengumuman berhasil dipublikasikan secara online!');
+            renderAdminAnnouncementsList();
+            renderPublicAdminAnnouncements();
+        } catch(e) {
+            alert('Gagal menyimpan pengumuman.');
+        } finally {
+            showLoading(false);
+        }
+    }
+
+    function renderAdminAnnouncementsList() {
+        const listContainer = document.getElementById('adminAnnouncementList');
+        if(!listContainer) return;
+        listContainer.innerHTML = '';
+        if(adminAnnouncements.length === 0) {
+            listContainer.innerHTML = `<p class="text-xs text-gray-400">Belum ada pengumuman aktif.</p>`;
+            return;
+        }
+        adminAnnouncements.forEach((a) => {
+            listContainer.innerHTML += `
+                <div class="bg-gray-50 border p-3 rounded flex justify-between items-start">
+                    <div>
+                        <h4 class="font-bold text-xs text-green-800">${a.title}</h4>
+                        <p class="text-[11px] text-gray-600 mt-1">${a.content}</p>
+                    </div>
+                    <button class="btn-danger text-[10px] px-2 py-1" onclick="deleteAnnouncement(${a.id})">Hapus</button>
+                </div>
+            `;
+        });
+    }
+
+    function deleteAnnouncement(id) {
+        adminAnnouncements = adminAnnouncements.filter(a => a.id !== id);
+        localStorage.setItem('SIP_QURBAN_ADMIN_ANNOUNCEMENTS', JSON.stringify(adminAnnouncements));
+        renderAdminAnnouncementsList();
+        renderPublicAdminAnnouncements();
+    }
+
+    function getMasterFilteredData(){
+        const q=(document.getElementById('searchInputDb')?.value||'').toLowerCase();
+        const y=document.getElementById('filterTahunDatabase')?.value||'ALL';
+        return getWorkingData().filter(d=>{
+            const date=String(d.tanggal||d.tahun||'');
+            const okY=y==='ALL'||date.substring(0,4)===String(y);
+            const okQ=[d.masjid,d.alamat,d.kecamatan,d.desa,d.petugas].some(v=>String(v||'').toLowerCase().includes(q));
+            const okRole=!currentUser||currentUser.role!=='Tim'||String(d.petugas||'').trim()===String(currentUser.nama||'').trim();
+            return okY&&okQ&&okRole;
+        });
+    }
+    function exportMasterExcel(){
+        const data=getMasterFilteredData();
+        if(!data.length){alert('Tidak ada data untuk diekspor.');return;}
+
+        const kecOrder=["Sirimau","Nusaniwe","Teluk Ambon","Baguala","Leitimur Selatan"];
+        const orderMap=Object.fromEntries(kecOrder.map((k,i)=>[k,i]));
+        const sorted=[...data].sort((a,b)=>{
+            const oa=orderMap[a.kecamatan]??99, ob=orderMap[b.kecamatan]??99;
+            return oa-ob || String(a.desa||'').localeCompare(String(b.desa||'')) ||
+                String(a.masjid||'').localeCompare(String(b.masjid||''));
+        });
+
+        const petugasHeader=getExportPetugasName(data);
+        const tahun=getExportYears(data);
+        const judul=`DOKUMENTASI PENGAWASAN PEMOTONGAN HEWAN KURBAN KOTA AMBON TAHUN ${tahun}`;
+
+        const wb=XLSX.utils.book_new();
+
+        // Sheet rekap: header mengikuti format Word/Excel Input Data Pemotongan.
+        const summary=[
+            [judul],
+            [`Nama Petugas: ${petugasHeader}`],
+            [`Tahun: ${tahun}`],
+            [],
+            ["Kecamatan","Jumlah Data","Sapi","Kambing","Domba","Total Hewan"]
+        ];
+        kecOrder.forEach(k=>{
+            const rows=sorted.filter(r=>r.kecamatan===k);
+            const sapi=rows.reduce((n,r)=>n+(+r.sapi||0),0);
+            const kambing=rows.reduce((n,r)=>n+(+r.kambing||0),0);
+            const domba=rows.reduce((n,r)=>n+(+r.domba||0),0);
+            summary.push([k,rows.length,sapi,kambing,domba,sapi+kambing+domba]);
+        });
+
+        const summaryWs=XLSX.utils.aoa_to_sheet(summary);
+        summaryWs['!merges']=[
+            {s:{r:0,c:0},e:{r:0,c:5}},
+            {s:{r:1,c:0},e:{r:1,c:5}},
+            {s:{r:2,c:0},e:{r:2,c:5}}
+        ];
+        summaryWs['!cols']=[
+            {wch:22},{wch:14},{wch:10},{wch:12},{wch:10},{wch:14}
+        ];
+        ['A1','A2','A3'].forEach(cell=>{
+            if(summaryWs[cell]) summaryWs[cell].s={
+                font:{bold:true},
+                alignment:{horizontal:'center',vertical:'center'}
+            };
+        });
+        XLSX.utils.book_append_sheet(wb,summaryWs,"Rekap Kecamatan");
+
+        const makeRows=(rows)=>[
+            [judul],
+            [`Nama Petugas: ${petugasHeader}`],
+            [`Tahun: ${tahun}`],
+            [],
+            ["No","Tanggal","Kecamatan","Desa/Kelurahan","Masjid/Tempat","Alamat","Sapi","Kambing","Domba","Antemortem","Postmortem","Tindakan","Petugas","Foto"],
+            ...rows.map((r,i)=>[
+                i+1,r.tanggal||'',r.kecamatan||'',r.desa||'',r.masjid||'',r.alamat||'',
+                r.sapi||0,r.kambing||0,r.domba||0,r.antemortem||'',r.postmortem||'',r.tindakan||'',
+                r.petugas||'',(Array.isArray(r.photos)?r.photos.filter(Boolean).length:0)+(Array.isArray(r.additionalPhotos)?r.additionalPhotos.filter(x=>x&&x.data).length:0)
+            ])
+        ];
+
+        const styleDetailSheet=(ws)=>{
+            ws['!merges']=[
+                {s:{r:0,c:0},e:{r:0,c:13}},
+                {s:{r:1,c:0},e:{r:1,c:13}},
+                {s:{r:2,c:0},e:{r:2,c:13}}
+            ];
+            ws['!cols']=[
+                {wch:6},{wch:13},{wch:16},{wch:20},{wch:28},{wch:32},
+                {wch:10},{wch:11},{wch:10},{wch:28},{wch:28},{wch:28},{wch:24},{wch:8}
+            ];
+            ['A1','A2','A3'].forEach(cell=>{
+                if(ws[cell]) ws[cell].s={
+                    font:{bold:true},
+                    alignment:{horizontal:'center',vertical:'center'}
+                };
+            });
+        };
+
+        kecOrder.forEach(k=>{
+            const rows=sorted.filter(r=>r.kecamatan===k);
+            if(rows.length){
+                const ws=XLSX.utils.aoa_to_sheet(makeRows(rows));
+                styleDetailSheet(ws);
+                XLSX.utils.book_append_sheet(wb,ws,k.substring(0,31));
+            }
+        });
+
+        const allWs=XLSX.utils.aoa_to_sheet(makeRows(sorted));
+        styleDetailSheet(allWs);
+        XLSX.utils.book_append_sheet(wb,allWs,"Semua Data");
+
+        XLSX.writeFile(wb,`Master_Database_SIP_KURBAN_${petugasHeader.replace(/[^a-zA-Z0-9_-]+/g,'_')}.xlsx`);
+    }
+
+    async function exportMasterWord(){
+        const data=getMasterFilteredData();
+        if(!data.length){alert('Tidak ada data untuk dibuatkan Word.');return;}
+        showLoading(true,'Membuat Word Master Database...');
+        try{
+            // Header Word mengikuti format Input Data Pemotongan.
+            // Nama petugas otomatis diambil dari field petugas pada record yang diekspor.
+            await generateAndSaveWordDoc(data);
+        }catch(e){
+            console.error(e);
+            alert('Gagal membuat Word Master Database.');
+        }finally{
+            showLoading(false);
+        }
+    }
+
+
+    function getPetugasFilteredData(){
+        const namaPetugas = String(currentUser && currentUser.nama ? currentUser.nama : '').trim();
+        return getWorkingData().filter(d => String(d.petugas || '').trim() === namaPetugas);
+    }
+
+    function applyExcelHeaderStyle(ws, title, petugasName, tahun){
+        const lastCol = 12; // A:L
+        ws['!merges'] = [
+            {s:{r:0,c:0},e:{r:0,c:lastCol-1}},
+            {s:{r:1,c:0},e:{r:1,c:lastCol-1}},
+            {s:{r:2,c:0},e:{r:2,c:lastCol-1}}
+        ];
+        ws['A1'] = {v:title, t:'s'};
+        ws['A2'] = {v:`Nama Petugas: ${petugasName}`, t:'s'};
+        ws['A3'] = {v:`Tahun: ${tahun}`, t:'s'};
+        ws['!cols'] = [
+            {wch:6},{wch:13},{wch:16},{wch:20},{wch:28},{wch:32},
+            {wch:28},{wch:10},{wch:11},{wch:10},{wch:28},{wch:28}
+        ];
+        ['A1','A2','A3'].forEach(cell=>{
+            if(ws[cell]) ws[cell].s = {font:{bold:true}, alignment:{horizontal:'center',vertical:'center'}};
+        });
+    }
+
+    async function exportPetugasWord(){
+        const data=getPetugasFilteredData();
+        if(!data.length){alert('Tidak ada data untuk dibuatkan Word.');return;}
+        showLoading(true,'Membuat Word data petugas...');
+        try{
+            // Nama diambil dari field petugas pada record yang benar-benar diekspor.
+            // generateAndSaveWordDoc akan otomatis memakai nama tersebut jika hanya ada satu petugas.
+            await generateAndSaveWordDoc(data);
+        }catch(e){
+            console.error(e);
+            alert('Gagal membuat Word data petugas.');
+        }finally{
+            showLoading(false);
+        }
+    }
+
+    function getExportYears(data){
+        const years=[...new Set(
+            data.map(r=>String(r.tanggal||r.tahun||'').substring(0,4)).filter(y=>/^\d{4}$/.test(y))
+        )].sort();
+        return years.length===1 ? years[0] : (years.length>1 ? 'Semua Tahun' : String(new Date().getFullYear()));
+    }
+
+    function getExportPetugasName(data, fallbackName=''){
+        const names=[...new Set(
+            data.map(r=>String(r.petugas||'').trim()).filter(Boolean)
+        )];
+        if(names.length===1) return names[0];
+        if(names.length>1) return 'Seluruh Petugas / Admin';
+        return String(fallbackName||'').trim() || 'Nama Petugas Tidak Tersedia';
+    }
+
+    function exportPetugasExcel(){
+        const data=getPetugasFilteredData();
+        if(!data.length){alert('Tidak ada data untuk dibuatkan Excel.');return;}
+
+        const petugasName=getExportPetugasName(
+            data,
+            currentUser && currentUser.nama ? String(currentUser.nama).trim() : ''
+        );
+        const tahun=getExportYears(data);
+
+        const rows=[
+            [`DOKUMENTASI PENGAWASAN PEMOTONGAN HEWAN KURBAN KOTA AMBON TAHUN ${tahun}`],
+            [`Nama Petugas: ${petugasName}`],
+            [`Tahun: ${tahun}`],
+            [],
+            ["No","Tanggal","Kecamatan","Desa/Kelurahan","Masjid/Tempat Pemotongan","Alamat","Sapi","Kambing","Domba","Antemortem","Postmortem","Tindakan"],
+            ...data.map((r,i)=>[
+                i+1,r.tanggal||'',r.kecamatan||'',r.desa||'',r.masjid||'',r.alamat||'',
+                r.sapi||0,r.kambing||0,r.domba||0,r.antemortem||'',r.postmortem||'',r.tindakan||''
+            ])
+        ];
+
+        const wb=XLSX.utils.book_new();
+        const ws=XLSX.utils.aoa_to_sheet(rows);
+
+        ws['!merges']=[
+            {s:{r:0,c:0},e:{r:0,c:11}},
+            {s:{r:1,c:0},e:{r:1,c:11}},
+            {s:{r:2,c:0},e:{r:2,c:11}}
+        ];
+        ws['!cols']=[
+            {wch:6},{wch:13},{wch:16},{wch:20},{wch:30},{wch:30},
+            {wch:10},{wch:11},{wch:10},{wch:28},{wch:28},{wch:28}
+        ];
+
+        ['A1','A2','A3'].forEach(cell=>{
+            if(ws[cell]){
+                ws[cell].s={
+                    font:{bold:true},
+                    alignment:{horizontal:'center',vertical:'center'}
+                };
+            }
+        });
+
+        XLSX.utils.book_append_sheet(wb,ws,'Data Petugas');
+        XLSX.writeFile(wb,`Data_Kurban_${petugasName.replace(/[^a-zA-Z0-9_-]+/g,'_')}.xlsx`);
+    }
+
+    function getAdminFilteredData(){
+        const q=(document.getElementById('adminDashSearch')?.value||'').toLowerCase();
+        const y=document.getElementById('adminDashYear')?.value||'ALL';
+        return getWorkingData().filter(d=>{
+            const date=String(d.tanggal||d.tahun||'');
+            const okYear=y==='ALL'||date.substring(0,4)===String(y);
+            const okSearch=[d.petugas,d.kecamatan,d.desa,d.masjid,d.alamat,d.antemortem,d.postmortem,d.tindakan].some(v=>String(v||'').toLowerCase().includes(q));
+            return okYear&&okSearch;
+        });
+    }
+
+    function populateAdminYearFilter(){
+        const el=document.getElementById('adminDashYear'); if(!el)return;
+        const years=[...new Set(getWorkingData().map(d=>String(d.tanggal||d.tahun||'').substring(0,4)).filter(Boolean))].sort((a,b)=>b-a);
+        const current=el.value||'ALL';
+        el.innerHTML='<option value="ALL">Semua Tahun</option>'+years.map(y=>`<option value="${y}">${y}</option>`).join('');
+        el.value=years.includes(current)?current:'ALL';
+    }
+
+    function renderAdminDashboardVisuals(data){
+        const destroy=(obj)=>{try{if(obj)obj.destroy();}catch(e){}};
+        const anteCounts={}, postCounts={};
+        data.forEach(r=>{
+            const a=String(r.antemortem||'Sehat / Normal'); anteCounts[a]=(anteCounts[a]||0)+1;
+            const p=String(r.postmortem||'Sehat / Layak Konsumsi Total'); postCounts[p]=(postCounts[p]||0)+1;
+        });
+        destroy(adminPieAnteInstance); destroy(adminPiePostInstance); destroy(adminAnimalInstance); destroy(adminBarInstance);
+        const c1=document.getElementById('adminPieAntemortem');
+        if(c1) adminPieAnteInstance=new Chart(c1,{type:'doughnut',data:{labels:Object.keys(anteCounts).length?Object.keys(anteCounts):['Belum ada data'],datasets:[{data:Object.keys(anteCounts).length?Object.values(anteCounts):[1]}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}});
+        const c2=document.getElementById('adminPiePostmortem');
+        if(c2) adminPiePostInstance=new Chart(c2,{type:'doughnut',data:{labels:Object.keys(postCounts).length?Object.keys(postCounts):['Belum ada data'],datasets:[{data:Object.keys(postCounts).length?Object.values(postCounts):[1]}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}});
+
+        const r=classifySpeciesStatus(data,'ante'), p=classifySpeciesStatus(data,'post');
+        const box=document.getElementById('adminInspectionSummary');
+        if(box){
+            box.innerHTML=['Sapi','Kambing','Domba'].map(sp=>{
+                const x=r[sp], y=p[sp];
+                return `<div class="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
+                    <div class="flex items-center justify-between mb-2"><b>${sp}</b><span class="text-[10px] bg-green-100 text-green-700 px-2 py-1 rounded-full">${x.diperiksa} diperiksa</span></div>
+                    <div class="grid grid-cols-2 gap-2 text-center text-xs">
+                        <div class="bg-green-50 rounded p-2">Layak Potong<br><b class="text-green-700 text-lg">${x.layak}</b></div>
+                        <div class="bg-yellow-50 rounded p-2">Ditunda<br><b class="text-yellow-700 text-lg">${x.ditunda}</b></div>
+                        <div class="bg-red-50 rounded p-2">Ditolak<br><b class="text-red-700 text-lg">${x.ditolak}</b></div>
+                        <div class="bg-blue-50 rounded p-2">Terpotong<br><b class="text-blue-700 text-lg">${y.terpotong}</b></div>
+                    </div>
+                    <div class="mt-2 pt-2 border-t text-xs">Layak konsumsi: <b>${y.layakKonsumsi}</b> | Tidak layak: <b>${y.tidakLayak}</b></div>
+                </div>`;
+            }).join('');
+        }
+
+        const species=['Sapi','Kambing','Domba'];
+        const totals=species.map(sp=>data.reduce((a,b)=>a+(parseInt(b[sp.toLowerCase()])||0),0));
+        const c3=document.getElementById('adminAnimalChart');
+        if(c3) adminAnimalInstance=new Chart(c3,{type:'doughnut',data:{labels:species,datasets:[{data:totals,backgroundColor:['#10b981','#f59e0b','#6366f1']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}});
+
+        const kecList=["Sirimau","Nusaniwe","Teluk Ambon","Baguala","Leitimur Selatan"];
+        const c4=document.getElementById('adminBarKecamatanChart');
+        if(c4) adminBarInstance=new Chart(c4,{type:'bar',data:{labels:kecList,datasets:[
+            {label:'Sapi',data:kecList.map(k=>data.filter(d=>d.kecamatan===k).reduce((a,b)=>a+(+b.sapi||0),0)),backgroundColor:'#10b981'},
+            {label:'Kambing',data:kecList.map(k=>data.filter(d=>d.kecamatan===k).reduce((a,b)=>a+(+b.kambing||0),0)),backgroundColor:'#f59e0b'},
+            {label:'Domba',data:kecList.map(k=>data.filter(d=>d.kecamatan===k).reduce((a,b)=>a+(+b.domba||0),0)),backgroundColor:'#6366f1'}
+        ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}});
+
+        const gallery=document.getElementById('adminPhotoGallery');
+        if(gallery){
+            gallery.innerHTML='';
+            data.forEach(item=>{
+                const photos=item.photos||[];
+                photos.forEach((p,idx)=>{if(p&&String(p).trim()) gallery.innerHTML+=`<div><img src="${p}" class="w-full h-24 object-cover rounded border"><p class="text-[10px] text-center text-gray-500 mt-1">${item.petugas||'Petugas'} - ${['(Foto 1)','(Foto 2)','(Foto 3)'][idx]||'Dokumentasi'}</p></div>`;});
+                (item.additionalPhotos||[]).forEach(p=>{if(p&&p.data) gallery.innerHTML+=`<div><img src="${p.data}" class="w-full h-24 object-cover rounded border"><p class="text-[10px] text-center text-orange-700 mt-1">${item.petugas||'Petugas'} - ${p.name||'Temuan'}</p></div>`;});
+                const adminPhotoCount=(Array.isArray(item.photos)?item.photos.filter(Boolean).length:0)+(Array.isArray(item.additionalPhotos)?item.additionalPhotos.filter(x=>x&&x.data).length:0);
+                if(adminPhotoCount>=3) gallery.innerHTML+=`<div class="col-span-2 mt-1"><button type="button" class="collage-download-btn" onclick="downloadPhotoCollage(${JSON.stringify(item.id)})"><i class="fas fa-images"></i> DOWNLOAD FOTO KOLASE (${Math.min(adminPhotoCount,9)} FOTO)</button></div>`;
+            });
+            if(!gallery.innerHTML) gallery.innerHTML='<div class="col-span-full text-center py-6 text-gray-400">Tidak ada foto dokumentasi yang di-upload.</div>';
+        }
+    }
+
+    function renderAdminDashboard(){
+        if(!currentUser || currentUser.role!=='Admin') return;
+        populateAdminYearFilter();
+        const data=getAdminFilteredData();
+        const set=(id,v)=>{const e=document.getElementById(id);if(e)e.innerText=v;};
+        set('adminDashData',data.length);
+        set('adminDashSapi',data.reduce((a,b)=>a+(parseInt(b.sapi)||0),0));
+        set('adminDashKambing',data.reduce((a,b)=>a+(parseInt(b.kambing)||0),0));
+        set('adminDashDomba',data.reduce((a,b)=>a+(parseInt(b.domba)||0),0));
+        set('adminDashPetugas',new Set(data.map(x=>x.petugas||'')).size);
+        renderAdminDashboardVisuals(data);
+        const tbody=document.getElementById('adminDashboardTableBody'); if(!tbody)return;
+        if(!data.length){tbody.innerHTML='<tr><td colspan="15" class="text-center p-5 text-gray-400">Belum ada data pemotongan.</td></tr>';return;}
+        tbody.innerHTML=data.map((r,i)=>{
+            const photos=(Array.isArray(r.photos)?r.photos.filter(Boolean).length:0)+(Array.isArray(r.additionalPhotos)?r.additionalPhotos.filter(x=>x&&x.data).length:0);
+            return `<tr><td class="text-center">${i+1}</td><td>${r.petugas||'-'}</td><td>${r.tanggal||'-'}</td><td>${r.kecamatan||'-'}</td><td>${r.desa||'-'}</td><td>${r.masjid||'-'}</td><td>${r.alamat||'-'}</td><td class="text-center">${r.sapi||0}</td><td class="text-center">${r.kambing||0}</td><td class="text-center">${r.domba||0}</td><td class="text-xs">${r.antemortem||'-'}</td><td class="text-xs">${r.postmortem||'-'}</td><td class="text-xs">${r.tindakan||'-'}</td><td class="text-center">${photos?'📷 '+photos:'-'}</td><td><div class="flex flex-col gap-1"><button class="btn-warning text-xs" onclick="openEditModal(${JSON.stringify(r.id)})">✏️ Edit</button><button class="btn-export btn-word text-xs" onclick="exportWordDokumentasi(${JSON.stringify(r.id)})">📄 Word</button><button class="btn-danger text-xs" onclick="deleteData(${JSON.stringify(r.id)})">🗑️ Hapus</button></div></td></tr>`;
+        }).join('');
+    }
+
+    async function refreshAdminDashboard(){
+        showLoading(true,'Memperbarui Dashboard Admin dari cloud...');
+        try{await fetchCloudData();renderAdminDashboard();alert('Dashboard Admin berhasil diperbarui.');}
+        catch(e){console.error(e);alert('Gagal memperbarui Dashboard Admin.');}
+        finally{showLoading(false);}
+    }
+
+    function exportAdminExcel(){
+        const data=getAdminFilteredData();
+        if(!data.length){alert('Tidak ada data untuk dibuatkan Excel.');return;}
+
+        // Header mengikuti data yang sedang dipilih/filter pada Dashboard Admin.
+        // Satu petugas -> nama petugas tersebut; lebih dari satu -> Seluruh Petugas / Admin.
+        const petugasHeader=getExportPetugasName(data);
+        const tahun=getExportYears(data);
+
+        const rows=[
+            [`DOKUMENTASI PENGAWASAN PEMOTONGAN HEWAN KURBAN KOTA AMBON TAHUN ${tahun}`],
+            [`Nama Petugas: ${petugasHeader}`],
+            [`Tahun: ${tahun}`],
+            [],
+            ["No","Petugas","Tanggal","Kecamatan","Desa/Kelurahan","Masjid/Tempat Pemotongan","Alamat","Sapi","Kambing","Domba","Antemortem","Postmortem","Tindakan"],
+            ...data.map((r,i)=>[
+                i+1,r.petugas||'',r.tanggal||'',r.kecamatan||'',r.desa||'',r.masjid||'',r.alamat||'',
+                r.sapi||0,r.kambing||0,r.domba||0,r.antemortem||'',r.postmortem||'',r.tindakan||''
+            ])
+        ];
+
+        const wb=XLSX.utils.book_new();
+        const ws=XLSX.utils.aoa_to_sheet(rows);
+
+        ws['!merges']=[
+            {s:{r:0,c:0},e:{r:0,c:12}},
+            {s:{r:1,c:0},e:{r:1,c:12}},
+            {s:{r:2,c:0},e:{r:2,c:12}}
+        ];
+        ws['!cols']=[
+            {wch:6},{wch:24},{wch:13},{wch:16},{wch:20},{wch:30},{wch:30},
+            {wch:10},{wch:11},{wch:10},{wch:28},{wch:28},{wch:28}
+        ];
+
+        ['A1','A2','A3'].forEach(cell=>{
+            if(ws[cell]){
+                ws[cell].s={
+                    font:{bold:true},
+                    alignment:{horizontal:'center',vertical:'center'}
+                };
+            }
+        });
+
+        XLSX.utils.book_append_sheet(wb,ws,'Dashboard Admin');
+        XLSX.writeFile(wb,'Dashboard_Admin_SIP_KURBAN.xlsx');
+    }
+
+    async function exportAdminWord(){
+        const data=getAdminFilteredData();
+        if(!data.length){alert('Tidak ada data untuk dibuatkan Word.');return;}
+        showLoading(true,'Membuat Word Dashboard Admin...');
+        try{
+            // Jangan memaksa nama placeholder. Nama ditentukan dari field petugas
+            // pada data yang sedang dipilih/filter.
+            await generateAndSaveWordDoc(data);
+        }catch(e){
+            console.error(e);
+            alert('Gagal membuat Word Dashboard Admin.');
+        }finally{
+            showLoading(false);
+        }
+    }
+
+    function getDinasFilteredData(){
+        const q=(document.getElementById('dinasDashSearch')?.value||'').toLowerCase();
+        const y=document.getElementById('dinasDashYear')?.value||'ALL';
+        return getWorkingData().filter(d=>{
+            const date=String(d.tanggal||d.tahun||'');
+            return (y==='ALL'||date.substring(0,4)===String(y)) &&
+                [d.petugas,d.kecamatan,d.desa,d.masjid,d.alamat,d.antemortem,d.postmortem,d.tindakan].some(v=>String(v||'').toLowerCase().includes(q));
+        });
+    }
+    function populateDinasYearFilter(){
+        const el=document.getElementById('dinasDashYear'); if(!el)return;
+        const years=[...new Set(getWorkingData().map(d=>String(d.tanggal||d.tahun||'').substring(0,4)).filter(Boolean))].sort((a,b)=>b-a);
+        const cur=el.value||'ALL';
+        el.innerHTML='<option value="ALL">Semua Tahun</option>'+years.map(y=>`<option value="${y}">${y}</option>`).join('');
+        el.value=years.includes(cur)?cur:'ALL';
+    }
+    function renderDinasDashboard(){
+        if(!currentUser || currentUser.role!=='Dinas') return;
+        populateDinasYearFilter();
+        const data=getDinasFilteredData(), set=(id,v)=>{const e=document.getElementById(id);if(e)e.innerText=v;};
+        set('dinasDashData',data.length); set('dinasDashSapi',data.reduce((a,b)=>a+(+b.sapi||0),0));
+        set('dinasDashKambing',data.reduce((a,b)=>a+(+b.kambing||0),0)); set('dinasDashDomba',data.reduce((a,b)=>a+(+b.domba||0),0));
+        set('dinasDashPetugas',new Set(data.map(x=>x.petugas||'')).size);
+        const tbody=document.getElementById('dinasDashboardTableBody'); if(!tbody)return;
+        if(!data.length){tbody.innerHTML='<tr><td colspan="15" class="text-center p-5 text-gray-400">Belum ada data.</td></tr>';return;}
+        tbody.innerHTML=data.map((r,i)=>{
+            const photos=(Array.isArray(r.photos)?r.photos.filter(Boolean).length:0)+(Array.isArray(r.additionalPhotos)?r.additionalPhotos.filter(x=>x&&x.data).length:0);
+            return `<tr>
+                <td>${i+1}</td><td>${r.petugas||'-'}</td><td>${r.tanggal||'-'}</td><td>${r.kecamatan||'-'}</td><td>${r.desa||'-'}</td><td>${r.masjid||'-'}</td><td>${r.alamat||'-'}</td>
+                <td>${r.sapi||0}</td><td>${r.kambing||0}</td><td>${r.domba||0}</td><td class="text-xs">${r.antemortem||'-'}</td><td class="text-xs">${r.postmortem||'-'}</td><td class="text-xs">${r.tindakan||'-'}</td><td>${photos?'📷 '+photos:'-'}</td>
+                <td><div class="flex flex-col gap-1"><button class="btn-warning text-xs" onclick="openEditModal(${JSON.stringify(r.id)})">✏️ Edit</button><button class="btn-word text-xs" onclick="exportWordDokumentasi(${JSON.stringify(r.id)})">📄 Word</button><button class="btn-danger text-xs" onclick="deleteData(${JSON.stringify(r.id)})">🗑️ Hapus</button></div></td>
+            </tr>`;
+        }).join('');
+    }
+    async function refreshDinasDashboard(){
+        showLoading(true,'Memperbarui Dashboard Dinas dari cloud...');
+        try{await fetchCloudData();renderDinasDashboard();alert('Dashboard Dinas berhasil diperbarui.');}
+        catch(e){console.error(e);alert('Gagal memperbarui Dashboard Dinas.');}
+        finally{showLoading(false);}
+    }
+    function exportDinasExcel(){
+        const data=getDinasFilteredData();
+        const rows=[["No","Petugas","Tanggal","Kecamatan","Desa/Kelurahan","Masjid/Tempat Pemotongan","Alamat","Sapi","Kambing","Domba","Antemortem","Postmortem","Tindakan"]];
+        data.forEach((r,i)=>rows.push([i+1,r.petugas||'',r.tanggal||'',r.kecamatan||'',r.desa||'',r.masjid||'',r.alamat||'',r.sapi||0,r.kambing||0,r.domba||0,r.antemortem||'',r.postmortem||'',r.tindakan||'']));
+        const wb=XLSX.utils.book_new(), ws=XLSX.utils.aoa_to_sheet(rows); XLSX.utils.book_append_sheet(wb,ws,'Dashboard Dinas'); XLSX.writeFile(wb,'Dashboard_Dinas_SIP_KURBAN.xlsx');
+    }
+    async function exportDinasWord(){
+        const data=getDinasFilteredData(); if(!data.length){alert('Tidak ada data untuk dibuatkan Word.');return;}
+        showLoading(true,'Membuat Word Dashboard Dinas...');
+        try{await generateAndSaveWordDoc(data,'Seluruh Data / Dinas');}catch(e){console.error(e);alert('Gagal membuat Word Dashboard Dinas.');}finally{showLoading(false);}
+    }
+
+    async function registerUser(e) {
+        e.preventDefault();
+        const newUser = {
+            type: "user",
+            id: Date.now(),
+            nama: document.getElementById('regNama').value,
+            username: document.getElementById('regUsername').value,
+            password: document.getElementById('regPassword').value,
+            role: document.getElementById('regRole').value,
+            wilayah: document.getElementById('regWilayah').value
+        };
+
+        showLoading(true, "Mendaftarkan petugas baru...");
+        try {
+            await fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newUser)
+            });
+
+            await new Promise(resolve => setTimeout(resolve, 700));
+            const refreshed = await fetchCloudUsers();
+            if (!refreshed) {
+                throw new Error('Akun belum dapat diverifikasi dari server setelah registrasi.');
+            }
+            alert('Petugas berhasil diregistrasikan ke Google Spreadsheet dan dapat login dari perangkat lain.');
+            document.getElementById('registerForm').reset();
+            renderUserTable();
+        } catch(err) {
+            console.error(err);
+            alert('Terjadi kesalahan koneksi ke server.');
+        } finally {
+            showLoading(false);
+        }
+    }
+
+    function renderUserTable() {
+        const tbody = document.getElementById('userTableBody');
+        if(!tbody) return;
+        tbody.innerHTML = '';
+        userStore.forEach((u, i) => {
+            tbody.innerHTML += `
+                <tr>
+                    <td class="text-center">${i+1}</td>
+                    <td><b>${u.nama}</b></td>
+                    <td>${u.username}</td>
+                    <td><span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-xs font-bold">${u.role}</span></td>
+                    <td>${u.wilayah}</td>
+                    <td class="text-center"><button class="btn-danger text-xs px-2 py-1" onclick="deleteUser(${u.id})">Hapus</button></td>
+                </tr>
+            `;
+        });
+    }
+
+    async function deleteUser(id) {
+        const userToDelete = userStore.find(u => u.id === id);
+        if(!userToDelete) return;
+
+        if (!confirm(`Apakah Anda yakin ingin menghapus petugas/pengguna "${userToDelete.nama}" (${userToDelete.username})?`)) {
+            return;
+        }
+
+        showLoading(true, "Menghapus akun petugas...");
+        try {
+            await fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: "deleteUser",
+                    action: "deleteUser",
+                    id: id,
+                    username: userToDelete.username
+                })
+            });
+
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            await fetchCloudUsers();
+            
+            alert('Akun petugas berhasil dihapus dari server cloud!');
+            renderUserTable();
+        } catch(err) {
+            console.error(err);
+            alert('Gagal menghapus akun petugas dari server.');
+        } finally {
+            showLoading(false);
+        }
+    }
+
+    function renderReport() {
+        const tbody = document.getElementById('kecamatanTableBody');
+        if(!tbody) return;
+        tbody.innerHTML = '';
+        const tahunVal = document.getElementById('filterTahunExecutive')?.value || 'ALL';
+        
+        const kecList = ["Sirimau", "Nusaniwe", "Teluk Ambon", "Baguala", "Leitimur Selatan"];
+        let totalSapiAll = 0, totalKambingAll = 0, totalDombaAll = 0;
+
+        kecList.forEach((kec, idx) => {
+            const kecData = dataStore.filter(d => {
+                const dateVal = d.tanggal || d.tahun || '';
+                const itemYear = dateVal.toString().substring(0, 4);
+                const matchTahun = tahunVal === 'ALL' || itemYear === String(tahunVal);
+                return d.kecamatan === kec && matchTahun;
+            });
+
+            const sapi = kecData.reduce((a, b) => a + (parseInt(b.sapi) || 0), 0);
+            const kambing = kecData.reduce((a, b) => a + (parseInt(b.kambing) || 0), 0);
+            const domba = kecData.reduce((a, b) => a + (parseInt(b.domba) || 0), 0);
+            const total = sapi + kambing + domba;
+
+            totalSapiAll += sapi;
+            totalKambingAll += kambing;
+            totalDombaAll += domba;
+
+            tbody.innerHTML += `
+                <tr>
+                    <td class="text-center">${idx + 1}</td>
+                    <td><b>Kecamatan ${kec}</b></td>
+                    <td class="text-center">${sapi}</td>
+                    <td class="text-center">${kambing}</td>
+                    <td class="text-center">${domba}</td>
+                    <td class="text-center font-bold text-green-800 bg-green-50">${total}</td>
+                </tr>
+            `;
+        });
+
+        tbody.innerHTML += `
+            <tr class="bg-gray-100 font-extrabold">
+                <td colspan="2" class="text-right">TOTAL KOTA AMBON:</td>
+                <td class="text-center">${totalSapiAll}</td>
+                <td class="text-center">${totalKambingAll}</td>
+                <td class="text-center">${totalDombaAll}</td>
+                <td class="text-center text-green-900 bg-green-100">${totalSapiAll + totalKambingAll + totalDombaAll}</td>
+            </tr>
+        `;
+    }
+
+    function exportReportExcel() {
+        let table = document.getElementById('kecamatanTable');
+        let wb = XLSX.utils.table_to_book(table, {sheet: "Laporan Eksekutif"});
+        XLSX.writeFile(wb, `Laporan_Eksekutif_SIP_KURBAN.xlsx`);
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const u = document.getElementById('loginUsername').value.trim();
+        const p = document.getElementById('loginPassword').value.trim();
+
+        if (!u || !p) {
+            alert('Username dan Password wajib diisi.');
+            return;
+        }
+
+        showLoading(true, 'Memverifikasi akun dari server pusat...');
+        try {
+            const found = await authenticateUser(u, p);
+
+            if (!found) {
+                alert('Username atau Password Salah!');
+                return;
+            }
+
+            currentUser = found;
+            localStorage.setItem('SIP_CURRENT_USER', JSON.stringify(found));
+            closeLoginModal();
+            applyRolePermissions();
+            alert(`Berhasil login sebagai ${found.nama} (${found.role})`);
+        } catch (error) {
+            console.error('Login error:', error);
+            alert('Login gagal. Pastikan koneksi internet dan Google Apps Script aktif.');
+        } finally {
+            showLoading(false);
+        }
+    });
+</script>
+
+<footer class="bg-slate-900 text-white border-t-4 border-amber-500 mt-12 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="text-center md:text-left">
+                    <p class="font-bold text-sm text-amber-400">DINAS PERTANIAN DAN KETAHANAN PANGAN KOTA AMBON</p>
+                    <p class="text-xs text-slate-400 mt-1">Bidang Peternakan dan Kesehatan Hewan - Hak Cipta &copy; 2026 SIP-KURBAN</p>
+                </div>
+                <div class="flex items-center space-x-4 text-xs text-slate-400">
+                    <span class="flex items-center space-x-1">
+                        <i class="fa-solid fa-circle text-[8px] text-emerald-400"></i>
+                        <span>Sistem Online</span>
+                    </span>
+                    <span>|</span>
+                    <span>Kota Ambon, Maluku</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+
+
+<!-- PEMILIH FOTO KOLASE JPG -->
+<div id="photoCollageModal" class="photo-collage-modal" aria-hidden="true">
+  <div class="photo-collage-box">
+    <div class="photo-collage-head">
+      <div>
+        <div style="font-weight:800;font-size:18px;color:#0f172a">Pilih Foto untuk Download JPG</div>
+        <div style="font-size:12px;color:#64748b;margin-top:4px">
+          Tandai foto yang ingin dimasukkan ke kolase. Pilih minimal 3 dan maksimal 12 foto.
+        </div>
+      </div>
+      <button type="button" class="photo-collage-btn secondary" onclick="closePhotoCollageSelector()">Tutup</button>
+    </div>
+
+    <div style="padding:16px 20px 4px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div>
+        <label style="display:block;font-size:13px;font-weight:700;color:#334155;margin-bottom:6px">Nama Masjid / Tempat Pemotongan</label>
+        <input id="photoCollageMosque" type="text"
+          placeholder="Diambil otomatis dari data yang sudah diinput"
+          readonly
+          style="width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid #cbd5e1;border-radius:9px;outline:none;background:#f8fafc">
+      </div>
+      
+    </div>
+
+    <div id="photoCollageGrid" class="photo-collage-grid"></div>
+
+    <div class="photo-collage-footer">
+      <div id="photoCollageCount" class="photo-collage-note">0 foto dipilih • Minimal 3 • Maksimal 12</div>
+      <button type="button" id="photoCollageDownload"
+        class="photo-collage-btn primary" disabled
+        onclick="downloadSelectedPhotoCollage()">
+        Download JPG Kolase
+      </button>
+    </div>
+  </div>
+</div>
+
+<style id="photo-collage-final-style">
+.photo-collage-modal{
+  position:fixed;inset:0;background:rgba(15,23,42,.72);z-index:99999;
+  display:none;align-items:center;justify-content:center;padding:14px;
+}
+.photo-collage-modal.show{display:flex}
+.photo-collage-box{
+  background:#fff;width:min(1000px,100%);max-height:94vh;overflow:auto;
+  border-radius:18px;box-shadow:0 25px 70px rgba(0,0,0,.35)
+}
+.photo-collage-head{
+  padding:16px 20px;border-bottom:1px solid #e5e7eb;
+  display:flex;justify-content:space-between;align-items:center;gap:12px
+}
+.photo-collage-grid{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;padding:18px 20px
+}
+.photo-collage-item{
+  position:relative;aspect-ratio:4/3;overflow:hidden;border:3px solid #e2e8f0;
+  border-radius:10px;background:#f8fafc;cursor:pointer
+}
+.photo-collage-item img{width:100%;height:100%;object-fit:cover;display:block}
+.photo-collage-item.selected{
+  border-color:#059669;box-shadow:0 0 0 4px rgba(5,150,105,.15)
+}
+.photo-collage-item .select-mark{
+  position:absolute;top:8px;right:8px;min-width:28px;height:28px;
+  display:flex;align-items:center;justify-content:center;border-radius:50%;
+  background:#fff;color:#64748b;font-weight:900;box-shadow:0 2px 8px rgba(0,0,0,.22)
+}
+.photo-collage-item.selected .select-mark{background:#059669;color:#fff}
+.photo-collage-item .selected-label{
+  position:absolute;left:8px;bottom:8px;background:#059669;color:#fff;
+  padding:5px 8px;border-radius:6px;font-size:11px;font-weight:800
+}
+.photo-collage-footer{
+  padding:15px 20px;border-top:1px solid #e5e7eb;display:flex;
+  align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap
+}
+.photo-collage-btn{
+  border:0;border-radius:9px;padding:10px 15px;font-weight:700;cursor:pointer
+}
+.photo-collage-btn.primary{background:#059669;color:#fff}
+.photo-collage-btn.secondary{background:#e2e8f0;color:#0f172a}
+.photo-collage-btn:disabled{opacity:.45;cursor:not-allowed}
+.photo-collage-note{font-size:13px;color:#64748b}
+@media(max-width:760px){
+  .photo-collage-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .photo-collage-box{max-height:96vh}
+}
+</style>
+
+<script id="photo-collage-final-script">
+(function(){
+  let collagePhotos = [];
+  let collageSelected = new Set();
+  let collageFilename = '';
+
+  window.openPhotoCollageSelector = function(photos, title, subtitle, filename, teamNames){
+    collagePhotos = (Array.isArray(photos) ? photos : []).filter(p => p && p.data);
+    collageSelected = new Set();
+    collageFilename = filename || ('Kolase_Dokumentasi_' + Date.now() + '.jpg');
+
+    const mosqueInput = document.getElementById('photoCollageMosque');
+    if (mosqueInput) mosqueInput.value = (subtitle || '').split(' • ')[0] || '';
+
+    // Nama tim otomatis dari akun yang menyimpan data.
+    window._collageTeamNames = teamNames || '';
+    renderCollageChoices();
+    document.getElementById('photoCollageModal').classList.add('show');
+    document.getElementById('photoCollageModal').setAttribute('aria-hidden','false');
+  };
+
+  window.closePhotoCollageSelector = function(){
+    const modal = document.getElementById('photoCollageModal');
+    if(modal){
+      modal.classList.remove('show');
+      modal.setAttribute('aria-hidden','true');
+    }
+  };
+
+  function renderCollageChoices(){
+    const grid = document.getElementById('photoCollageGrid');
+    grid.innerHTML = '';
+
+    collagePhotos.forEach((photo, index) => {
+      const item = document.createElement('div');
+      item.className = 'photo-collage-item' + (collageSelected.has(index) ? ' selected' : '');
+      item.innerHTML =
+        '<img src="' + String(photo.data).replace(/"/g,'&quot;') + '" alt="Dokumentasi">' +
+        '<span class="select-mark">' + (collageSelected.has(index) ? '✓' : '○') + '</span>' +
+        (collageSelected.has(index) ? '<span class="selected-label">Dipilih</span>' : '');
+      item.onclick = function(){ toggleCollagePhoto(index); };
+      grid.appendChild(item);
+    });
+
+    updateCollageCount();
+  }
+
+  function toggleCollagePhoto(index){
+    if(collageSelected.has(index)){
+      collageSelected.delete(index);
+    }else{
+      if(collageSelected.size >= 12){
+        alert('Maksimal 12 foto yang dapat dimasukkan ke kolase.');
+        return;
+      }
+      collageSelected.add(index);
+    }
+    renderCollageChoices();
+  }
+
+  function updateCollageCount(){
+    const count = collageSelected.size;
+    document.getElementById('photoCollageCount').textContent =
+      count + ' foto dipilih • Minimal 3 • Maksimal 12';
+    document.getElementById('photoCollageDownload').disabled = count < 3 || count > 12;
+  }
+
+  function loadImage(src){
+    return new Promise((resolve,reject)=>{
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = src;
+    });
+  }
+
+  window.downloadSelectedPhotoCollage = async function(){
+    if(collageSelected.size < 3 || collageSelected.size > 12){
+      alert('Silakan pilih minimal 3 dan maksimal 12 foto.');
+      return;
+    }
+
+    const selected = [...collageSelected].map(i => collagePhotos[i]);
+    const mosque = String(
+      (selected[0] && selected[0].locationCaption) ||
+      ''
+    ).trim();
+    const officer = window._collageTeamNames || '';
+
+    try{
+      showLoading(true, 'Membuat kolase JPG...');
+      const loaded = await Promise.all(selected.map(p => loadImage(p.data)));
+
+      const W = 1800;
+      const headerH = 205;
+      const gap = 22;
+      const pad = 30;
+      const n = loaded.length;
+
+      let cols = n <= 4 ? 2 : (n <= 9 ? 3 : 4);
+      let rows = Math.ceil(n / cols);
+      const cellW = Math.floor((W - (2*pad) - ((cols-1)*gap)) / cols);
+      const cellH = Math.floor(cellW * 0.72);
+      const H = headerH + pad + (rows*cellH) + ((rows-1)*gap) + pad;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = W;
+      canvas.height = H;
+      const ctx = canvas.getContext('2d');
+
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0,0,W,H);
+
+      // Header hasil JPG sesuai permintaan:
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#14532d';
+      ctx.font = 'bold 38px Arial, sans-serif';
+      ctx.fillText('Dinas Pertanian dan Ketahanan Pangan Kota Ambon', W/2, 55);
+
+      ctx.font = 'bold 30px Arial, sans-serif';
+      ctx.fillText('Bidang Peternakan dan Kesehatan Hewan', W/2, 96);
+
+      ctx.fillStyle = '#334155';
+      ctx.font = 'italic 25px Arial, sans-serif';
+      if (officer) {
+        ctx.fillText('(' + officer + ')', W/2, 137);
+      }
+
+      ctx.textAlign = 'left';
+
+      function drawCover(img,x,y,w,h){
+        const scale = Math.max(w/img.width, h/img.height);
+        const dw = img.width*scale;
+        const dh = img.height*scale;
+        const sx = x + (w-dw)/2;
+        const sy = y + (h-dh)/2;
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(x,y,w,h);
+        ctx.clip();
+        ctx.drawImage(img,sx,sy,dw,dh);
+        ctx.restore();
+      }
+
+      loaded.forEach((img,index)=>{
+        const row = Math.floor(index/cols);
+        const col = index%cols;
+        const x = pad + col*(cellW+gap);
+        const y = headerH + row*(cellH+gap);
+        drawCover(img,x,y,cellW,cellH);
+
+        // Keterangan lokasi ditampilkan di dalam foto.
+        const caption = String(selected[index].locationCaption || '').trim() || 'Nama Masjid/Tempat Tidak Diisi';
+        const maxWidth = cellW - 32;
+        ctx.font = 'bold 24px Arial, sans-serif';
+        const words = caption.split(/\s+/);
+        const lines = [];
+        let line = '';
+        words.forEach(word => {
+          const test = line ? line + ' ' + word : word;
+          if (ctx.measureText(test).width > maxWidth && line) {
+            lines.push(line);
+            line = word;
+          } else {
+            line = test;
+          }
+        });
+        if (line) lines.push(line);
+
+        const shown = lines.slice(-2);
+        const lineH = 30;
+        const boxH = shown.length * lineH + 22;
+        const boxY = y + cellH - boxH;
+        ctx.fillStyle = 'rgba(0,0,0,.68)';
+        ctx.fillRect(x, boxY, cellW, boxH);
+        ctx.fillStyle = '#fff';
+        ctx.textAlign = 'center';
+        shown.forEach((txt, li) => ctx.fillText(txt, x + cellW/2, boxY + 31 + li*lineH));
+        ctx.textAlign = 'left';
+      });
+
+      const blob = await new Promise(resolve => canvas.toBlob(resolve,'image/jpeg',0.94));
+      if(!blob) throw new Error('Gagal membuat JPG.');
+
+      const safe = mosque.replace(/[\\/:*?"<>|]+/g,'-').replace(/\s+/g,'_').slice(0,60);
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'Kolase_' + safe + '_' + n + 'foto.jpg';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+
+      closePhotoCollageSelector();
+    }catch(err){
+      console.error(err);
+      alert('Foto tidak dapat diproses menjadi kolase JPG. Pastikan foto dapat dibuka di halaman ini.');
+    }finally{
+      showLoading(false);
+    }
+  };
+})();
+</script>
+
+</body>
+</html>
